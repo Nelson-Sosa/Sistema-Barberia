@@ -55,7 +55,7 @@ async function ensureUserDoc(user) {
       updatedAt: serverTimestamp(),
     }
     await setDoc(ref, profile)
-    console.log('[AUDIT] ensureUserDoc — setDoc completado')
+    console.log('[AUDIT TEMP] ensureUserDoc — ✅ DOCUMENTO CREADO en Firestore. Colección:', COLLECTIONS.USERS, '| Doc ID (UID):', user.uid, '| Proyecto:', db.app.options.projectId)
   } else {
     console.log('[AUDIT] ensureUserDoc — Actualizando documento existente (updateDoc)')
     const updateData = {
@@ -137,6 +137,7 @@ export async function registerWithEmail(email, password, displayName) {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   })
+  console.log('[AUDIT TEMP] registerWithEmail — ✅ DOCUMENTO CREADO en Firestore. Colección:', COLLECTIONS.USERS, '| Doc ID (UID):', user.uid, '| Proyecto:', db.app.options.projectId)
 
   return credential
 }
