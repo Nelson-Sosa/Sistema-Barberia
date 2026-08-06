@@ -10,7 +10,7 @@ export default function LocationSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Lado izquierdo: Información */}
         <div className="flex flex-col justify-center p-8 lg:p-12">
-          <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+          <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary text-brand-gold">
             <MapPin className="h-6 w-6" />
           </div>
           <h2 className="mb-3 text-2xl font-bold text-brand-text sm:text-3xl">Nuestra Ubicación</h2>

@@ -43,14 +43,14 @@ class ErrorBoundary extends Component {
             <AlertTriangle className="h-7 w-7 text-red-400" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-brand-text">
               Algo salió mal
             </h3>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-brand-text-muted">
               Ocurrió un error inesperado. Por favor, intentá de nuevo.
             </p>
             {import.meta.env.DEV && this.state.error && (
-              <pre className="mt-3 max-w-md overflow-auto rounded bg-slate-900 p-3 text-left text-xs text-red-300">
+              <pre className="mt-3 max-w-md overflow-auto rounded border border-red-500/20 bg-red-500/5 p-3 text-left text-xs text-red-600">
                 {this.state.error.message}
               </pre>
             )}

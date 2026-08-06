@@ -56,9 +56,9 @@ function MisBeneficiosCard({ totalVisits }) {
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-2xl border border-brand-pastel bg-brand-card shadow-sm p-6 transition-all duration-300 hover:border-brand-primary/50">
+      <div className="relative overflow-hidden rounded-2xl border border-brand-border bg-brand-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.2)]">
         {rewardReady && (
-          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-500/8 blur-3xl" />
+          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-brand-gold/10 blur-3xl" />
         )}
 
         <div className="relative space-y-5">
@@ -66,14 +66,12 @@ function MisBeneficiosCard({ totalVisits }) {
           <div className="flex items-center gap-3">
             <span
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-xl',
-                rewardReady
-                  ? 'bg-gradient-to-br from-emerald-500/20 to-emerald-400/10'
-                  : 'bg-gradient-to-br from-rose-500/20 to-violet-500/20'
+                'flex h-10 w-10 items-center justify-center rounded-xl border border-brand-border bg-brand-alt-row',
+                rewardReady && 'border-brand-gold/30 bg-brand-gold/10'
               )}
             >
               <Gift
-                className={cn('h-5 w-5', rewardReady ? 'text-emerald-400' : 'text-rose-400')}
+                className={cn('h-5 w-5', rewardReady ? 'text-brand-gold' : 'text-brand-primary')}
               />
             </span>
             <div>
@@ -84,12 +82,12 @@ function MisBeneficiosCard({ totalVisits }) {
 
           {/* Message */}
           <div className="flex items-start gap-2">
-            {msg.isReward && <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />}
+            {msg.isReward && <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" />}
             <div>
               <p
                 className={cn(
                   'text-sm font-medium',
-                  msg.isReward ? 'text-emerald-500' : 'text-brand-text'
+                  msg.isReward ? 'text-brand-gold' : 'text-brand-text'
                 )}
               >
                 {msg.title}
@@ -108,9 +106,9 @@ function MisBeneficiosCard({ totalVisits }) {
 
           {/* Reward badge */}
           {rewardReady && (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
-              <Gift className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="text-xs font-medium text-emerald-300">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-3 py-1">
+              <Gift className="h-3.5 w-3.5 text-brand-gold" />
+              <span className="text-xs font-semibold text-brand-gold">
                 20% DTO. DISPONIBLE
               </span>
             </div>
@@ -121,7 +119,7 @@ function MisBeneficiosCard({ totalVisits }) {
             {rewardReady ? (
               <button
                 onClick={() => setShowModal(true)}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 px-4 py-2 text-xs font-medium text-emerald-300 transition-all duration-200 hover:bg-emerald-500/10 active:scale-[0.97]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-brand-gold/40 px-4 py-2 text-xs font-semibold text-brand-gold transition-all duration-200 hover:bg-brand-gold/10 active:scale-[0.97]"
               >
                 Ver recompensa
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -129,7 +127,7 @@ function MisBeneficiosCard({ totalVisits }) {
             ) : (
               <button
                 onClick={() => navigate(ROUTES.APPOINTMENTS)}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500/90 to-violet-500/90 px-4 py-2 text-xs font-medium text-white shadow-sm transition-all duration-200 hover:from-rose-600 hover:to-violet-600 active:scale-[0.97]"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-brand-primary px-4 py-2 text-xs font-medium text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-hover active:scale-[0.97]"
               >
                 Reservar turno
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -142,18 +140,18 @@ function MisBeneficiosCard({ totalVisits }) {
       {/* Reward modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+          <div className="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
           <div className="relative w-full max-w-sm rounded-2xl border border-brand-border bg-brand-card p-6 shadow-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute right-4 top-4 rounded-lg p-1 text-brand-text-muted hover:bg-brand-pastel/30 hover:text-brand-text z-50"
+              className="absolute right-4 top-4 rounded-lg p-1 text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-text z-50"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-400/10">
-                <Gift className="h-7 w-7 text-emerald-500" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gold/10">
+                <Gift className="h-7 w-7 text-brand-gold" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-brand-text">Recompensa disponible</h2>
@@ -166,7 +164,7 @@ function MisBeneficiosCard({ totalVisits }) {
                   setShowModal(false)
                   navigate(ROUTES.APPOINTMENTS)
                 }}
-                className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-500/90 to-violet-500/90 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:from-rose-600 hover:to-violet-600 active:scale-[0.97]"
+                className="mt-2 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-hover active:scale-[0.97]"
               >
                 Reservar turno
                 <ArrowRight className="h-4 w-4" />

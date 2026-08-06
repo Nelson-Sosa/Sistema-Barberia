@@ -34,7 +34,7 @@ function Modal({ isOpen, onClose, title, children, className, maxWidthClass = "m
       {/* Modal Container */}
       <div
         className={cn(
-          "relative flex flex-col w-full max-w-[95vw] max-h-[90vh] rounded-2xl border border-brand-pastel bg-brand-card shadow-2xl overflow-hidden",
+          "relative flex flex-col w-full max-w-[95vw] max-h-[90vh] rounded-2xl border border-brand-border bg-brand-card shadow-[0_24px_64px_-16px_rgba(0,0,0,0.25)] overflow-hidden",
           maxWidthClass,
           className
         )}
@@ -42,7 +42,7 @@ function Modal({ isOpen, onClose, title, children, className, maxWidthClass = "m
         {!hideHeader && (
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-brand-text-muted hover:bg-brand-pastel hover:text-brand-primary transition-colors"
+            className="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-primary transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

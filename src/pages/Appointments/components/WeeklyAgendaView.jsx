@@ -38,7 +38,7 @@ const ROW_HEIGHT_BREAKPOINTS = {
 const STATUS_CELL_STYLES = {
   [APPOINTMENT_STATUS.PENDING]: 'border-l-amber-500',
   [APPOINTMENT_STATUS.CONFIRMED]: 'border-l-sky-500',
-  [APPOINTMENT_STATUS.IN_PROGRESS]: 'border-l-rose-500',
+  [APPOINTMENT_STATUS.IN_PROGRESS]: 'border-l-brand-gold',
   [APPOINTMENT_STATUS.DONE]: 'border-l-emerald-500',
   [APPOINTMENT_STATUS.CANCELLED]: 'border-l-red-500',
   [APPOINTMENT_STATUS.NO_SHOW]: 'border-l-amber-600',
@@ -47,7 +47,7 @@ const STATUS_CELL_STYLES = {
 const STATUS_BG_TINTS = {
   [APPOINTMENT_STATUS.PENDING]: 'bg-amber-500/10',
   [APPOINTMENT_STATUS.CONFIRMED]: 'bg-sky-500/10',
-  [APPOINTMENT_STATUS.IN_PROGRESS]: 'bg-rose-500/20',
+  [APPOINTMENT_STATUS.IN_PROGRESS]: 'bg-brand-gold/15',
   [APPOINTMENT_STATUS.DONE]: 'bg-emerald-500/10',
   [APPOINTMENT_STATUS.CANCELLED]: '',
   [APPOINTMENT_STATUS.NO_SHOW]: '',
@@ -56,7 +56,7 @@ const STATUS_BG_TINTS = {
 const STATUS_CHIP_STYLES = {
   [APPOINTMENT_STATUS.PENDING]: 'bg-amber-500/15 text-amber-400',
   [APPOINTMENT_STATUS.CONFIRMED]: 'bg-sky-500/15 text-sky-400',
-  [APPOINTMENT_STATUS.IN_PROGRESS]: 'bg-rose-500/15 text-rose-400',
+  [APPOINTMENT_STATUS.IN_PROGRESS]: 'bg-brand-gold/15 text-brand-gold',
   [APPOINTMENT_STATUS.DONE]: 'bg-emerald-500/15 text-emerald-400',
   [APPOINTMENT_STATUS.CANCELLED]: 'bg-red-500/15 text-red-400',
   [APPOINTMENT_STATUS.NO_SHOW]: 'bg-amber-600/15 text-amber-500',
@@ -534,8 +534,8 @@ export default function WeeklyAgendaView() {
                         style={{ top: `${currentTimeTop}px` }}
                       >
                         <div className="flex items-center -ml-0.5">
-                          <div className="h-2 w-2 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50" />
-                          <div className="flex-1 h-px bg-rose-500" />
+                          <div className="h-2 w-2 rounded-full bg-brand-gold shadow-lg shadow-brand-gold/40" />
+                          <div className="flex-1 h-px bg-brand-gold" />
                         </div>
                       </div>
                     )}

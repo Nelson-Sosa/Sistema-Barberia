@@ -7,9 +7,9 @@ import {
   UserCircle,
   Image as ImageIcon,
   GalleryHorizontal,
+  Home,
+  Scissors,
 } from 'lucide-react'
-import { InicioIcon } from '@/components/icons/InicioIcon'
-import { ServiciosIcon } from '@/components/icons/ServiciosIcon'
 import { ROUTES } from '@/routes/routes'
 
 /**
@@ -39,7 +39,7 @@ export const NAV_ITEMS = [
     id: 'user-dashboard',
     label: 'Inicio',
     path: ROUTES.USER_DASHBOARD,
-    icon: InicioIcon,
+    icon: Home,
     description: 'Panel de fidelización',
     roles: ['user'],
   },
@@ -63,7 +63,7 @@ export const NAV_ITEMS = [
     id: 'services',
     label: 'Servicios',
     path: ROUTES.SERVICES,
-    icon: ServiciosIcon,
+    icon: Scissors,
     description: 'Servicios y precios',
     roles: ['admin', 'user'],
   },

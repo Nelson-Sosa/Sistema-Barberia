@@ -17,11 +17,11 @@ function ProgressBar({ value = 0, max = 100, className, barClassName }) {
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
-      className={cn('h-3 w-full overflow-hidden rounded-full bg-white/[0.06]', className)}
+      className={cn('h-3 w-full overflow-hidden rounded-full bg-brand-alt-row', className)}
     >
       <div
         className={cn(
-          'h-full rounded-full bg-gradient-to-r from-rose-500/70 to-pink-500/70 transition-all duration-700 ease-out',
+          'h-full rounded-full bg-gradient-to-r from-brand-primary to-brand-gold transition-all duration-700 ease-out',
           barClassName
         )}
         style={{ width: `${width}%` }}

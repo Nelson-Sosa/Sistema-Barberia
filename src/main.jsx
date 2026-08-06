@@ -31,23 +31,23 @@ createRoot(document.getElementById('root')).render(
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#1e293b',  // slate-800
-              color: '#f1f5f9',       // slate-100
-              border: '1px solid #334155', // slate-700
-              borderRadius: '10px',
+              background: '#161616',
+              color: '#f7f7f7',
+              border: '1px solid #2A2A2A',
+              borderRadius: '12px',
               fontSize: '14px',
               padding: '12px 16px',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.4)',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.18)',
             },
             success: {
               iconTheme: {
-                primary: '#f43f5e',   // rose-500
+                primary: '#16A34A',
                 secondary: '#fff',
               },
             },
             error: {
               iconTheme: {
-                primary: '#ef4444',   // red-500
+                primary: '#ef4444',
                 secondary: '#fff',
               },
             },

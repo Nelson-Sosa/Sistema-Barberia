@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { X, Clock, Calendar, Scissors, Camera, Banknote, CheckCircle, XCircle, ExternalLink, UserRound, UserCheck, Phone } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -28,7 +28,7 @@ const PAYMENT_STATUS_LABELS = {
   [PAYMENT_STATUS.PENDING_PROOF]: { label: 'Pendiente de comprobante', color: 'text-amber-400 bg-amber-500/10' },
   [PAYMENT_STATUS.PROOF_SUBMITTED]: { label: 'Comprobante enviado', color: 'text-blue-400 bg-blue-500/10' },
   [PAYMENT_STATUS.APPROVED]: { label: 'Pago aprobado', color: 'text-emerald-400 bg-emerald-500/10' },
-  [PAYMENT_STATUS.REJECTED]: { label: 'Pago rechazado', color: 'text-rose-400 bg-rose-500/10' },
+  [PAYMENT_STATUS.REJECTED]: { label: 'Pago rechazado', color: 'text-red-500 bg-red-500/10' },
 }
 
 export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit, onStatusChange }) {
@@ -68,7 +68,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
 
   const handleReject = () => {
     if (!rejectReason.trim()) {
-      toast.error('Escribí un motivo para el rechazo')
+      toast.error('EscribÃ­ un motivo para el rechazo')
       return
     }
     rejectPayment({ id: appointment.id, adminUid: user?.uid, reason: rejectReason }, {
@@ -145,7 +145,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
               </p>
             )}
             {!appointment.clientPhone && (
-              <p className="mt-2 text-xs text-brand-text-muted">Sin teléfono registrado</p>
+              <p className="mt-2 text-xs text-brand-text-muted">Sin telÃ©fono registrado</p>
             )}
           </div>
 
@@ -172,7 +172,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
             <Scissors className="h-4 w-4 mt-0.5 text-brand-text-muted shrink-0" />
             <div>
               <p className="text-sm font-medium text-brand-text">{appointment.serviceName}</p>
-              <p className="text-xs text-brand-text-muted mt-px">Duración: {formatDuration(safeDuration)}</p>
+              <p className="text-xs text-brand-text-muted mt-px">DuraciÃ³n: {formatDuration(safeDuration)}</p>
             </div>
           </div>
 
@@ -186,17 +186,17 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
           <div className="flex items-start gap-3">
             <Clock className="h-4 w-4 mt-0.5 text-brand-text-muted shrink-0" />
             <div>
-              <p className="text-sm text-brand-text">{appointment.time} → {endTimeStr}</p>
+              <p className="text-sm text-brand-text">{appointment.time} â†’ {endTimeStr}</p>
             </div>
           </div>
 
-          {/* ── Payment Section (only when seña enabled) */}
+          {/* â”€â”€ Payment Section (only when seÃ±a enabled) */}
           {hasPayment && (
             <div className="rounded-xl border border-brand-border bg-brand-bg overflow-hidden">
               {/* Section header */}
               <div className="flex items-center gap-2 border-b border-brand-border px-3 py-2.5 bg-brand-card">
                 <Banknote className="h-4 w-4 text-brand-primary shrink-0" />
-                <p className="text-xs font-semibold text-brand-text uppercase tracking-wider">Pago de seña</p>
+                <p className="text-xs font-semibold text-brand-text uppercase tracking-wider">Pago de seÃ±a</p>
               </div>
 
               <div className="p-3 space-y-3">
@@ -211,7 +211,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                     <p className="text-sm font-medium text-brand-text">{pmt.percentage}%</p>
                   </div>
                   <div>
-                    <p className="text-xs text-brand-text-muted">Seña</p>
+                    <p className="text-xs text-brand-text-muted">SeÃ±a</p>
                     <p className="text-sm font-semibold text-amber-400">{formatCurrency(pmt.amount)}</p>
                   </div>
                 </div>
@@ -225,8 +225,8 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
 
                 {/* Rejection reason */}
                 {pmt.status === PAYMENT_STATUS.REJECTED && pmt.rejectionReason && (
-                  <div className="rounded-lg border border-rose-500/20 bg-rose-500/5 p-2">
-                    <p className="text-xs text-rose-400">
+                  <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-2">
+                    <p className="text-xs text-red-500">
                       <span className="font-medium">Motivo:</span> {pmt.rejectionReason}
                     </p>
                   </div>
@@ -248,12 +248,12 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                       className="flex items-center gap-1 text-xs text-brand-primary hover:underline"
                     >
                       <ExternalLink className="h-3 w-3" />
-                      Ver en tamaño completo
+                      Ver en tamaÃ±o completo
                     </a>
                   </div>
                 )}
 
-                {/* Admin actions — only when proof is submitted and not yet reviewed */}
+                {/* Admin actions â€” only when proof is submitted and not yet reviewed */}
                 {canApproveOrReject && (
                   <div className="space-y-2 pt-1">
                     {/* Approve */}
@@ -277,8 +277,8 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                         onClick={() => setShowRejectInput(true)}
                         disabled={isApproving || isRejecting}
                         className={cn(
-                          'flex w-full items-center justify-center gap-2 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm font-medium text-rose-400 transition-colors',
-                          'hover:bg-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed'
+                          'flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-500 transition-colors',
+                          'hover:bg-red-500/15 disabled:opacity-50 disabled:cursor-not-allowed'
                         )}
                       >
                         <XCircle className="h-4 w-4" />
@@ -291,7 +291,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                           onChange={(e) => setRejectReason(e.target.value)}
                           placeholder="Motivo del rechazo (requerido)..."
                           rows={2}
-                          className="w-full rounded-lg border border-brand-border bg-brand-bg px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-muted focus:border-rose-500/50 focus:outline-none focus:ring-1 focus:ring-rose-500/30 resize-none"
+                          className="w-full rounded-lg border border-brand-border bg-brand-bg px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-muted focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/30 resize-none"
                         />
                         <div className="flex gap-2">
                           <button
@@ -306,8 +306,8 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                             onClick={handleReject}
                             disabled={isRejecting || !rejectReason.trim()}
                             className={cn(
-                              'flex-1 rounded-lg border border-rose-500/30 bg-rose-500/10 py-1.5 text-xs font-medium text-rose-400 transition-colors',
-                              'hover:bg-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed'
+                              'flex-1 rounded-lg border border-red-500/30 bg-red-500/10 py-1.5 text-xs font-medium text-red-500 transition-colors',
+                              'hover:bg-red-500/15 disabled:opacity-50 disabled:cursor-not-allowed'
                             )}
                           >
                             {isRejecting ? 'Rechazando...' : 'Confirmar rechazo'}
@@ -322,7 +322,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                 {pmt.status === PAYMENT_STATUS.APPROVED && (
                   <div className="flex items-center gap-1.5 text-xs text-emerald-400">
                     <CheckCircle className="h-3.5 w-3.5" />
-                    Pago aprobado. Turno confirmado automáticamente.
+                    Pago aprobado. Turno confirmado automÃ¡ticamente.
                   </div>
                 )}
               </div>
@@ -364,3 +364,4 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
     </>
   )
 }
+

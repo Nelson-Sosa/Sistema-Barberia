@@ -26,7 +26,7 @@ function ProtectedRoute() {
 
   if (loading) {
     return (
-      <div className="flex h-[100dvh] w-full items-center justify-center bg-slate-950">
+      <div className="flex h-[100dvh] w-full items-center justify-center bg-brand-bg">
         <Spinner size="lg" />
       </div>
     )

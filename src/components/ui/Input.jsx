@@ -41,7 +41,7 @@ const Input = forwardRef(function Input(
         >
           {label}
           {required && (
-            <span className="ml-1 text-brand-primary" aria-hidden="true">
+            <span className="ml-1 text-brand-gold" aria-hidden="true">
               *
             </span>
           )}
@@ -65,14 +65,14 @@ const Input = forwardRef(function Input(
             error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
           }
           className={cn(
-            'w-full rounded-lg border bg-brand-bg px-3 py-2.5 text-base sm:text-sm text-brand-text',
+            'w-full rounded-lg border bg-brand-card px-3 py-2.5 text-base sm:text-sm text-brand-text',
             'placeholder:text-brand-text-muted',
-            'transition-colors duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-1 focus:ring-offset-brand-bg',
+            'transition-all duration-200',
+            'focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:ring-offset-1 focus:ring-offset-brand-bg',
             // Border state
             error
               ? 'border-red-500 focus:ring-red-500'
-              : 'border-brand-pastel hover:border-brand-primary/50 focus:border-brand-primary',
+              : 'border-brand-border hover:border-brand-text-muted/40 focus:border-brand-primary',
             // Icon padding
             leftIcon && 'pl-10',
             rightIcon && 'pr-10',

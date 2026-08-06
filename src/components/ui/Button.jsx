@@ -7,27 +7,28 @@ import Spinner from '@/components/ui/Spinner'
  */
 const variantClasses = {
   primary:
-    'bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-hover shadow-sm shadow-brand-primary/20',
+    'bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-hover shadow-sm shadow-brand-primary/10',
+  gold:
+    'bg-brand-gold text-white hover:bg-[#b28c1f] active:bg-[#9c7a1b] shadow-sm shadow-brand-gold/20',
   secondary:
-    'bg-brand-card text-brand-text hover:bg-brand-pastel/30 active:bg-brand-pastel/50 border border-brand-pastel',
+    'bg-brand-card text-brand-text hover:bg-brand-alt-row active:bg-brand-alt-row border border-brand-border',
   outline:
     'border border-brand-primary text-brand-primary hover:bg-brand-primary/5 active:bg-brand-primary/10',
   ghost:
-    'text-brand-text-muted hover:bg-brand-pastel/30 hover:text-brand-primary active:bg-brand-pastel/50',
+    'text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-primary active:bg-brand-pastel/50',
   danger:
-    'bg-red-500/90 text-white hover:bg-red-600 active:bg-red-700 shadow-sm shadow-red-500/10',
+    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm shadow-red-500/10',
   success:
     'bg-brand-success text-white hover:bg-emerald-600 active:bg-emerald-700',
 }
 
 const sizeClasses = {
-  xs: 'min-h-[36px] h-7 px-2.5 text-xs gap-1.5',
-  sm: 'min-h-[40px] h-8 px-3 text-sm gap-1.5',
-  md: 'min-h-[44px] h-9 px-4 text-sm gap-2',
-  lg: 'min-h-[48px] h-10 px-5 text-base gap-2',
-  xl: 'min-h-[52px] h-12 px-6 text-base gap-2.5',
+  xs: 'h-7 px-2.5 text-xs gap-1.5',
+  sm: 'h-8 px-3 text-sm gap-1.5',
+  md: 'h-9 px-4 text-sm gap-2',
+  lg: 'h-10 px-5 text-base gap-2',
+  xl: 'h-12 px-6 text-base gap-2.5',
 }
-
 const iconSizeMap = {
   xs: 'xs',
   sm: 'xs',
@@ -77,7 +78,7 @@ const Button = forwardRef(function Button(
         // Base styles
         'inline-flex items-center justify-center rounded-lg font-medium',
         'transition-all duration-200 ease-in-out',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg',
         'disabled:pointer-events-none disabled:opacity-50',
         // Variants & sizes
         variantClasses[variant],

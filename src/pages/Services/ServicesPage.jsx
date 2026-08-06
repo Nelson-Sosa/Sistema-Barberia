@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { Scissors, Plus, FolderKanban, Search, X } from 'lucide-react'
-import { NailPolishIcon } from '@/components/icons/NailPolishIcon'
 import { useNavigate } from 'react-router-dom'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { useAuth } from '@/hooks/useAuth'
@@ -135,17 +134,20 @@ function ServicesPage() {
   const hasFilteredServices = grouped.categories.length > 0 || grouped.uncategorized.length > 0
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-8">
       {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-500/20 text-rose-500">
-            <NailPolishIcon className="h-6 w-6" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-brand-border bg-brand-card px-3 py-1 text-xs font-medium text-brand-text-muted">
+            <Scissors className="h-3.5 w-3.5 text-brand-gold" />
+            Catálogo
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-brand-text">Catálogo de Servicios</h1>
-            <p className="text-sm text-brand-text-muted">Explorá nuestros servicios y reservá tu turno.</p>
-          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-text sm:text-3xl">
+            Catálogo de Servicios
+          </h1>
+          <p className="mt-1.5 text-sm text-brand-text-muted">
+            Explorá nuestros servicios y reservá tu turno.
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -177,7 +179,7 @@ function ServicesPage() {
           </div>
           <input
             type="text"
-            className="w-full rounded-xl border border-brand-pastel bg-brand-bg py-2 pl-10 pr-10 text-sm text-brand-text placeholder-brand-text-muted transition-colors focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+            className="h-10 w-full rounded-xl border border-brand-border bg-brand-card pl-10 pr-10 text-sm text-brand-text placeholder:text-brand-text-muted transition-all focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/30"
             placeholder="Buscar por nombre, descripción o categoría..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -201,7 +203,7 @@ function ServicesPage() {
         </div>
       ) : hasAnyServices ? (
         hasFilteredServices ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8">
             {/* Grouped by category */}
             {grouped.categories.map(({ category, services }) => (
               <CategoryCard
@@ -234,14 +236,14 @@ function ServicesPage() {
             )}
           </div>
         ) : (
-          <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-brand-pastel bg-brand-pastel/10">
+          <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-brand-border bg-brand-card">
             <Search className="mb-3 h-10 w-10 text-brand-text-muted opacity-50" />
             <p className="text-lg font-medium text-brand-text-muted">No se encontraron servicios</p>
-            <p className="text-sm text-brand-text-muted mt-1">Intentá con otros términos de búsqueda.</p>
+            <p className="mt-1 text-sm text-brand-text-muted">Intentá con otros términos de búsqueda.</p>
           </div>
         )
       ) : (
-        <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-brand-pastel bg-brand-pastel/10">
+        <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-brand-border bg-brand-card">
           <Scissors className="mb-3 h-10 w-10 text-brand-text-muted" />
           <p className="text-lg font-medium text-brand-text-muted">No hay servicios disponibles</p>
         </div>

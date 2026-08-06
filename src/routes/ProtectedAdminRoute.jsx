@@ -19,7 +19,7 @@ function ProtectedAdminRoute() {
   // Wait for both auth state AND Firestore role before making decisions
   if (loading || loadingRole) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-slate-950">
+      <div className="flex h-screen w-full items-center justify-center bg-brand-bg">
         <Spinner size="lg" />
       </div>
     )

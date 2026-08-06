@@ -5,10 +5,10 @@ import AppointmentStatusMenu from './AppointmentStatusMenu'
 import { cn } from '@/utils/cn'
 
 const PAYMENT_CHIP = {
-  [PAYMENT_STATUS.PENDING_PROOF]: 'bg-amber-500/10 text-amber-500',
-  [PAYMENT_STATUS.PROOF_SUBMITTED]: 'bg-blue-500/10 text-blue-500',
-  [PAYMENT_STATUS.APPROVED]: 'bg-emerald-500/10 text-emerald-500',
-  [PAYMENT_STATUS.REJECTED]: 'bg-rose-500/10 text-rose-500',
+  [PAYMENT_STATUS.PENDING_PROOF]: 'bg-amber-500/10 text-amber-600',
+  [PAYMENT_STATUS.PROOF_SUBMITTED]: 'bg-sky-500/10 text-sky-600',
+  [PAYMENT_STATUS.APPROVED]: 'bg-emerald-500/10 text-emerald-600',
+  [PAYMENT_STATUS.REJECTED]: 'bg-red-500/10 text-red-600',
 }
 
 const PAYMENT_LABEL = {

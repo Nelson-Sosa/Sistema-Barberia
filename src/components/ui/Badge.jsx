@@ -1,8 +1,9 @@
 import { cn } from '@/utils/cn'
 
 const variantClasses = {
-  default: 'bg-brand-pastel/30 text-brand-text-muted',
-  primary: 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20',
+  default: 'bg-brand-alt-row text-brand-text-muted border border-brand-border',
+  primary: 'bg-brand-primary/5 text-brand-primary border border-brand-primary/15',
+  gold: 'bg-brand-gold/10 text-brand-gold border border-brand-gold/25',
   success: 'bg-brand-success/10 text-brand-success border border-brand-success/20',
   warning: 'bg-amber-500/10 text-amber-600 border border-amber-500/20',
   danger: 'bg-red-500/10 text-red-600 border border-red-500/20',
@@ -43,6 +44,7 @@ function Badge({ children, variant = 'default', size = 'md', dot = false, classN
           className={cn('h-1.5 w-1.5 rounded-full', {
             'bg-brand-text-muted': variant === 'default',
             'bg-brand-primary': variant === 'primary',
+            'bg-brand-gold': variant === 'gold',
             'bg-brand-success': variant === 'success',
             'bg-amber-500': variant === 'warning',
             'bg-red-500': variant === 'danger',

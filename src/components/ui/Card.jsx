@@ -14,8 +14,8 @@ function Card({ children, className, ...props }) {
   return (
     <div
       className={cn(
-        'rounded-xl border border-brand-pastel bg-brand-card/95 backdrop-blur-sm',
-        'shadow-md shadow-brand-text/5',
+        'rounded-2xl border border-brand-border bg-brand-card',
+        'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_-4px_rgba(0,0,0,0.06)]',
         className
       )}
       {...props}
@@ -32,12 +32,12 @@ Card.Header = function CardHeader({ title, description, action, className }) {
   return (
     <div
       className={cn(
-        'flex items-start justify-between gap-4 border-b border-brand-pastel px-5 py-4',
+        'flex items-start justify-between gap-4 border-b border-brand-border px-5 py-4',
         className
       )}
     >
       <div>
-        {title && <h3 className="font-semibold text-brand-text">{title}</h3>}
+        {title && <h3 className="text-base font-semibold text-brand-text">{title}</h3>}
         {description && (
           <p className="mt-0.5 text-sm text-brand-text-muted">{description}</p>
         )}
@@ -63,7 +63,7 @@ Card.Footer = function CardFooter({ children, className }) {
   return (
     <div
       className={cn(
-        'border-t border-brand-pastel px-5 py-3',
+        'border-t border-brand-border px-5 py-3',
         className
       )}
     >

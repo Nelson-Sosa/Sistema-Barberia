@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, CalendarDays, Clock, ArrowRight, AlertCircle } from 'lucide-react'
+import { CalendarDays, Clock, ArrowRight, AlertCircle, Scissors } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useAppointmentsByClient } from '@/hooks/useAppointments'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/routes/routes'
-import { APPOINTMENT_STATUS, STATUS_CONFIG } from '@/constants/app'
+import { STATUS_CONFIG } from '@/constants/app'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import Badge from '@/components/ui/Badge'
@@ -43,15 +43,15 @@ function UserDashboardPage() {
   const upcoming = futureAppointments[0] || null
 
   return (
-    <div className="flex flex-col gap-6 animate-fade-in max-w-3xl mx-auto">
+    <div className="flex flex-col gap-8 animate-fade-in max-w-3xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-brand-text">
-          Hola, {userProfile?.displayName || user?.displayName || 'Bienvenida'}
+        <h1 className="text-2xl font-bold tracking-tight text-brand-text sm:text-3xl">
+          Hola, {userProfile?.displayName || user?.displayName || 'Bienvenido'}
         </h1>
         <p className="mt-1 text-sm text-brand-text-muted">
           {totalVisits === 0
-            ? 'Comienza tu experiencia con nosotros.'
+            ? 'Comienza tu experiencia en la barbería.'
             : `Tienes ${totalVisits} visita${totalVisits !== 1 ? 's' : ''} completada${totalVisits !== 1 ? 's' : ''}.`
           }
         </p>
@@ -65,20 +65,20 @@ function UserDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-brand-pastel bg-brand-card p-6 shadow-sm shadow-brand-text/5 transition-all duration-300 hover:border-brand-primary/50"
+          className="rounded-2xl border border-brand-border bg-brand-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.18)]"
         >
           <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-pastel/30">
-              <Sparkles className="h-6 w-6 text-brand-primary" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-brand-gold">
+              <Scissors className="h-6 w-6" />
             </span>
             <div className="flex-1">
-              <p className="text-base font-semibold text-brand-text">¿Lista para consentirte?</p>
+              <p className="text-base font-semibold text-brand-text">Bienvenido a la barbería</p>
               <p className="mt-1 text-sm text-brand-text-muted leading-relaxed">
                 Reserva tu primer turno y comienza a disfrutar de todos los beneficios.
               </p>
               <button
                 onClick={() => navigate(ROUTES.APPOINTMENTS)}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-brand-primary-hover active:scale-[0.97] transition-all duration-200"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-hover active:scale-[0.97]"
               >
                 Reservar turno
                 <ArrowRight className="h-4 w-4" />
@@ -94,11 +94,11 @@ function UserDashboardPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-brand-pastel bg-brand-card p-6 shadow-sm shadow-brand-text/5 transition-all duration-300 hover:border-brand-primary/50"
+          className="rounded-2xl border border-brand-border bg-brand-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.18)]"
         >
           <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/15">
-              <CalendarDays className="h-5 w-5 text-sky-600" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-border bg-brand-alt-row text-brand-primary">
+              <CalendarDays className="h-5 w-5" />
             </span>
             <div>
               <p className="text-sm font-medium text-brand-text">Próximo turno</p>
@@ -106,7 +106,7 @@ function UserDashboardPage() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-brand-bg border border-brand-pastel px-4 py-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-brand-alt-row/60 border border-brand-border px-4 py-3">
             <div className="flex items-center gap-3">
               <Clock className="h-4 w-4 text-brand-text-muted" />
               <div>
@@ -123,7 +123,7 @@ function UserDashboardPage() {
 
           <button
             onClick={() => navigate(ROUTES.APPOINTMENTS)}
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-brand-primary hover:text-brand-primary-hover transition-colors"
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-brand-primary hover:text-brand-gold transition-colors"
           >
             Ver mis turnos
             <ArrowRight className="h-3.5 w-3.5" />
@@ -134,11 +134,11 @@ function UserDashboardPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-brand-pastel bg-brand-card p-6 shadow-sm shadow-brand-text/5 transition-all duration-300 hover:border-brand-primary/50"
+          className="rounded-2xl border border-brand-border bg-brand-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.18)]"
         >
           <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-pastel/20">
-              <AlertCircle className="h-6 w-6 text-brand-text-muted" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-alt-row text-brand-text-muted">
+              <AlertCircle className="h-6 w-6" />
             </span>
             <div className="flex-1">
               <p className="text-base font-semibold text-brand-text">No tienes turnos programados</p>
@@ -147,7 +147,7 @@ function UserDashboardPage() {
               </p>
               <button
                 onClick={() => navigate(ROUTES.APPOINTMENTS)}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-brand-primary-hover active:scale-[0.97] transition-all duration-200"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-brand-primary-hover active:scale-[0.97]"
               >
                 Reservar ahora
                 <ArrowRight className="h-4 w-4" />

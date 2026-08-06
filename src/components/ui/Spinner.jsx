@@ -21,7 +21,7 @@ function Spinner({ size = 'md', className, label = 'Cargando...' }) {
   return (
     <span role="status" aria-label={label} className="inline-flex">
       <Loader2
-        className={cn('animate-spin text-rose-500', sizeClasses[size], className)}
+        className={cn('animate-spin text-brand-primary', sizeClasses[size], className)}
         aria-hidden="true"
       />
       <span className="sr-only">{label}</span>
