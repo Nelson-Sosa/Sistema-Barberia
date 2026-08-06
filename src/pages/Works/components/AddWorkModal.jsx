@@ -61,7 +61,7 @@ export default function AddWorkModal({ isOpen, onClose, appointment }) {
       setIsUploading(true)
 
       // Upload all images to Cloudinary
-      const folder = `patynails/works/${appointment.id}`
+      const folder = `works/${appointment.id}`
       const uploaded = await uploadImages(files, folder, handleProgress)
 
       // Create Firestore document
@@ -132,7 +132,7 @@ export default function AddWorkModal({ isOpen, onClose, appointment }) {
         <Input
           label="Título"
           id="work-title"
-          placeholder="Ej: Soft Gel Baby Boomer"
+          placeholder="Ej: Trabajo 1"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={isBusy}

@@ -10,7 +10,7 @@ const getWhatsAppMessage = (pathname) => {
   // Se pueden agregar nuevos casos ('/servicios', '/reservas', etc.) sin tocar el render.
   switch (pathname) {
     case '/':
-      return '¡Hola!\n\nMe gustaría obtener información sobre los servicios de patynails y conocer la disponibilidad para agendar un turno.\n\nMuchas gracias.'
+      return '¡Hola!\n\nMe gustaría obtener información sobre los servicios y conocer la disponibilidad para agendar un turno.\n\nMuchas gracias.'
     
     // Ejemplos para futuras rutas:
     // case '/servicios':
@@ -24,7 +24,7 @@ const getWhatsAppMessage = (pathname) => {
 
     default:
       // Mensaje por defecto en caso de no coincidir con las rutas anteriores
-      return '¡Hola!\n\nMe gustaría obtener información sobre los servicios de patynails y conocer la disponibilidad para agendar un turno.\n\nMuchas gracias.'
+      return '¡Hola!\n\nMe gustaría obtener información sobre los servicios y conocer la disponibilidad para agendar un turno.\n\nMuchas gracias.'
   }
 }
 
@@ -38,7 +38,7 @@ const getWhatsAppMessage = (pathname) => {
 const WhatsAppFloatingButton = () => {
   const { pathname } = useLocation()
   
-  const PHONE_NUMBER = '595984925322'
+  const PHONE_NUMBER = '00000000000'
   const message = getWhatsAppMessage(pathname)
   const encodedMessage = encodeURIComponent(message)
   

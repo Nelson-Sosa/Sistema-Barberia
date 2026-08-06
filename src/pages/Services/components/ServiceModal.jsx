@@ -78,7 +78,7 @@ function ServiceModal({ isOpen, onClose, service, defaultCategoryId }) {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
           <Input 
             label="Nombre del servicio" 
-            placeholder="Ej. Manicura Tradicional"
+            placeholder="Ej. Servicio"
             error={errors.name?.message}
             {...register('name')}
           />

@@ -1,9 +1,9 @@
 import { MapPin, Clock, ExternalLink } from 'lucide-react'
 
 export default function LocationSection() {
-  // Datos de ejemplo - Se pueden modificar más adelante con la ubicación real
-  const address = "Zona Centro Educativo Integrity, Encarnación"
-  const mapsLink = "https://maps.app.goo.gl/2v3piCh9FJeV1taH9"
+  // Datos de ejemplo - Configurar con la ubicación real del negocio
+  const address = "Dirección del negocio"
+  const mapsLink = "#"
 
   return (
     <section className="mt-12 overflow-hidden rounded-2xl border border-brand-pastel bg-brand-card shadow-sm">
@@ -15,7 +15,7 @@ export default function LocationSection() {
           </div>
           <h2 className="mb-3 text-2xl font-bold text-brand-text sm:text-3xl">Nuestra Ubicación</h2>
           <p className="mb-8 text-brand-text-muted">
-            Vení a conocernos y viví la experiencia patynails en nuestro salón diseñado para tu comodidad.
+            Vení a conocernos y viví la experiencia de nuestro servicio en un espacio diseñado para tu comodidad.
           </p>
           
           <div className="space-y-6">
@@ -64,7 +64,7 @@ export default function LocationSection() {
             allowFullScreen="" 
             loading="lazy" 
             referrerPolicy="no-referrer-when-downgrade"
-            title="Ubicación patynails"
+            title="Ubicación del negocio"
             className="h-full w-full object-cover"
           />
         </div>

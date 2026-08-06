@@ -12,7 +12,7 @@ import { APP_NAME } from '@/constants/app'
 import { formatPhoneStoragePY } from '@/utils/formatters'
 import { updateUserProfile } from '@/services/users/userProfileService'
 import { linkGuestHistory } from '@/services/benefits/benefitsService'
-import LogoSrc from '@/assets/PatyNailsLogo.jpg'
+import LogoSrc from '@/assets/logo-placeholder.svg'
 import { usePageTitle } from '@/hooks/usePageTitle'
 
 import Button from '@/components/ui/Button'
@@ -134,7 +134,7 @@ function RegisterPage() {
               label="Email"
               type="email"
               id="register-email"
-              placeholder="hola@patynails.com"
+              placeholder="correo@ejemplo.com"
               autoComplete="email"
               leftIcon={<Mail className="h-4 w-4" />}
               error={errors.email?.message}

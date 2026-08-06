@@ -7,15 +7,23 @@ import { getStorage } from 'firebase/storage'
  * Firebase configuration loaded from Vite environment variables.
  * All variables must be prefixed with VITE_ to be exposed to the client.
  * Set these in your .env.local file (never commit real values to the repo).
+ *
+ * ════════════════════════════════════════════════════════════════
+ * ⚙️ CONFIGURACIÓN PENDIENTE — NUEVO PROYECTO FIREBASE
+ * ════════════════════════════════════════════════════════════════
+ * Para activar la integración completá las variables VITE_FIREBASE_*
+ * en .env.local con los datos de tu proyecto Firebase nuevo
+ * (Firebase Console → Configuración del proyecto → Tus aplicaciones).
+ * No quedan credenciales del proyecto anterior en el código.
  */
 const FALLBACK = {
-  apiKey: 'AIzaSyBFgbvH-c7WboK3Gsym_GeP5eYheI3sQzU',
-  authDomain: 'patynails-244c1.firebaseapp.com',
-  projectId: 'patynails-244c1',
-  storageBucket: 'patynails-244c1.firebasestorage.app',
-  messagingSenderId: '770322899269',
-  appId: '1:770322899269:web:cea6d2ab8205f0315a5e2c',
-  measurementId: 'G-4D56E71HPM',
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+  measurementId: '',
 }
 
 const firebaseConfig = {

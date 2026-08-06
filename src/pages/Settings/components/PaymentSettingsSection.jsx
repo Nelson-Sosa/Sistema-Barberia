@@ -179,7 +179,7 @@ export default function PaymentSettingsSection() {
                 label="Alias"
                 value={form.accountAlias ?? ''}
                 onChange={(v) => set('accountAlias', v)}
-                placeholder="Ej: PATYNAILS"
+                placeholder="Ej: MIALIAS"
               />
             </div>
           </div>

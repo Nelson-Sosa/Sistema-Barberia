@@ -4,11 +4,11 @@ import { cn } from '@/utils/cn'
 function InstagramLink({ isCollapsed, onMobileClose }) {
   return (
     <a
-      href="https://www.instagram.com/patynails_023/"
+      href="#"
       target="_blank"
       rel="noopener noreferrer"
-      title={isCollapsed ? 'Instagram @patynails_023' : undefined}
-      aria-label="Instagram @patynails_023"
+      title={isCollapsed ? 'Instagram @tu_handle' : undefined}
+      aria-label="Instagram @tu_handle"
       onClick={() => onMobileClose?.()}
       className={cn(
         'group relative flex items-center rounded-lg px-3 py-2.5 min-h-[44px]',
@@ -29,7 +29,7 @@ function InstagramLink({ isCollapsed, onMobileClose }) {
       {!isCollapsed && (
         <div className="flex flex-col leading-tight">
           <span>Instagram</span>
-          <span className="text-[11px] text-brand-text-muted/60">@patynails_023</span>
+          <span className="text-[11px] text-brand-text-muted/60">@tu_handle</span>
         </div>
       )}
     </a>

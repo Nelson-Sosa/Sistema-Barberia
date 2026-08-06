@@ -61,7 +61,7 @@ function CategoryModal({ isOpen, onClose, category }) {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
           <Input
             label="Nombre de la categoría"
-            placeholder="Ej. Manicura"
+            placeholder="Ej. Categoría"
             error={errors.name?.message}
             {...register('name')}
           />

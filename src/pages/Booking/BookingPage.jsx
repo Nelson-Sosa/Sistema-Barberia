@@ -27,7 +27,7 @@ import BookingCheckout from '@/components/booking/BookingCheckout'
 
 const STEPS = { CATEGORY: 0, SERVICE: 1, SLOT: 2, IDENTITY: 3, PAYMENT: 4, SUCCESS: 5 }
 
-const DRAFT_KEY = 'patynails_booking_draft'
+const DRAFT_KEY = 'app_booking_draft'
 
 // Capitalize the first letter of a label
 function capitalize(str = '') {
@@ -505,7 +505,7 @@ function BookingPage() {
             </p>
           ) : (
             <p className="mt-2 text-sm text-brand-text-muted max-w-md">
-              Tu turno quedó agendado. Te esperamos en PatyNails.
+              Tu turno quedó agendado. Te esperamos.
             </p>
           )}
 

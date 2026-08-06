@@ -58,7 +58,7 @@ function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onMobileClose })
           )}
         >
           <img
-            src="/PatyNails.png"
+            src="/logo-placeholder.svg"
             alt={`${APP_NAME} logo`}
             draggable={false}
             className={cn(

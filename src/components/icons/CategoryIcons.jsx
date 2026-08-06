@@ -1,4 +1,4 @@
-/* Premium, outline-style category icons for the Paty Nails services catalog.
+/* Premium, outline-style category icons for the services catalog.
    Shared visual treatment: round caps/joins, uniform 1.8 stroke, currentColor.
    Manicura, Pedicura and Cejas live in their own component files. */
 const base = {

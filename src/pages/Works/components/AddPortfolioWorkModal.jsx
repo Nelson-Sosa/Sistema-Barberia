@@ -66,7 +66,7 @@ export default function AddPortfolioWorkModal({ isOpen, onClose }) {
 
       // Upload all images to Cloudinary. Use a generic folder for portfolio.
       const timestamp = Date.now()
-      const folder = `patynails/works/portfolio_${timestamp}`
+      const folder = `works/portfolio_${timestamp}`
       const uploaded = await uploadImages(files, folder, handleProgress)
 
       // Create Firestore document (type: portfolio)
@@ -128,7 +128,7 @@ export default function AddPortfolioWorkModal({ isOpen, onClose }) {
         <Input
           label="Título"
           id="portfolio-title"
-          placeholder="Ej: Soft Gel Nude Elegante"
+          placeholder="Ej: Diseño Elegante"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={isBusy}

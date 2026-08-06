@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { loginSchema } from '@/schemas/authSchemas'
 import { ROUTES } from '@/routes/routes'
 import { APP_NAME, USER_ROLES } from '@/constants/app'
-import LogoSrc from '@/assets/PatyNailsLogo.jpg'
+import LogoSrc from '@/assets/logo-placeholder.svg'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { usePendingAction } from '@/hooks/usePendingAction'
 
@@ -186,7 +186,7 @@ function LoginPage() {
               label="Email"
               type="email"
               id="login-email"
-              placeholder="hola@patynails.com"
+              placeholder="correo@ejemplo.com"
               autoComplete="email"
               leftIcon={<Mail className="h-4 w-4" />}
               error={errors.email?.message}

@@ -1,6 +1,6 @@
 # Sistema Dinámico de Horarios (Schedule System)
 
-El sistema de agendamiento y reserva de PatyNails utiliza una configuración dinámica desde Firestore, permitiendo al administrador definir bloques de atención por día de la semana y el intervalo de los turnos sin depender de código estático.
+El sistema de agendamiento y reserva utiliza una configuración dinámica desde Firestore, permitiendo al administrador definir bloques de atención por día de la semana y el intervalo de los turnos sin depender de código estático.
 
 ## Arquitectura de Datos
 

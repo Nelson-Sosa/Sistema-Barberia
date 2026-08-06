@@ -10,7 +10,7 @@ const REWARD_EVERY = 6
 function getMessage(progress, totalVisits) {
   if (totalVisits === 0) {
     return {
-      title: 'Bienvenido a patynails',
+      title: 'Bienvenido',
       subtitle: 'Reserva tu primer turno y comienza a disfrutar de todos los beneficios.',
     }
   }

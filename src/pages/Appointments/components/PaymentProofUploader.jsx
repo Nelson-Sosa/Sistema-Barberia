@@ -9,7 +9,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 const ALLOWED_EXTENSIONS = '.jpg, .jpeg, .png, .webp'
 const MAX_SIZE_MB = 5
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
-const CLOUDINARY_FOLDER = 'patynails/comprobantes'
+const CLOUDINARY_FOLDER = 'comprobantes'
 
 /**
  * PaymentProofUploader

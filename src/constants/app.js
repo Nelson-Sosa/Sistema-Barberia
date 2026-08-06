@@ -3,8 +3,8 @@
  * Centralize app-wide configuration values here.
  */
 
-export const APP_NAME = 'patynails'
-export const APP_TAGLINE = 'Gestión de Salón de Belleza'
+export const APP_NAME = 'NewProjectApp'
+export const APP_TAGLINE = 'Sistema de Gestión'
 export const APP_VERSION = '1.0.0'
 
 /** Default pagination page size */

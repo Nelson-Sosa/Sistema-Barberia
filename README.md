@@ -1,16 +1,55 @@
-# React + Vite
+# NewProjectApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Sistema de gestión de negocios (reservas, clientes, servicios, agenda, cobros y portafolio).
+Base limpia y desacoplada, lista para evolucionar como un producto nuevo.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19 + Vite 8** (SPA con HMR)
+- **TypeScript-ready** (proyecto en JS/JSX)
+- **Tailwind CSS v4** (configuración CSS-first)
+- **Firebase** (Auth, Firestore, Storage) — integración lista para configurar
+- **Cloudinary** (subida directa de imágenes — módulo de trabajos)
+- **TanStack Query** (datos y caché)
+- **React Router v7** · **React Hook Form** + **Zod** · **Framer Motion** · **Oxlint**
 
-## React Compiler
+## Scripts
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install     # instalar dependencias
+npm run dev     # servidor de desarrollo
+npm run build   # build de producción
+npm run preview # previsualizar build
+npm run lint    # lint (oxlint)
+```
 
-## Expanding the Oxlint configuration
+## Configuración pendiente
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+1. **Firebase**: completá las variables `VITE_FIREBASE_*` en `.env.local`
+   (Firebase Console → Configuración → Aplicaciones web).
+2. **Cloudinary**: completá `VITE_CLOUDINARY_CLOUD_NAME` y
+   `VITE_CLOUDINARY_UPLOAD_PRESET` en `.env.local` (con tu cuenta nueva).
+3. **Hosting** (`.firebaserc` y `.github/workflows/firebase-hosting.yml`):
+   definí el `projectId` de tu nuevo proyecto Firebase.
+4. **Branding**: `src/constants/app.js` (`APP_NAME`, `APP_TAGLINE`),
+   `index.html` (título / SEO) y `public/logo-placeholder.svg`.
+
+## Estructura
+
+```
+src/
+  assets/       # logo placeholder (reemplazar con el branding nuevo)
+  components/   # UI común, layout, iconos, booking, notificaciones
+  constants/    # configuración global (app, navigation, notifications)
+  context/      # AuthContext
+  firebase/     # config de Firebase
+  hooks/        # hooks de datos y UI
+  layouts/      # AppLayout
+  lib/          # firestore realtime, queryClient, zod
+  pages/        # páginas (Login, Register, Booking, Dashboard, ...)
+  routes/       # router y rutas protegidas
+  schemas/      # schemas Zod
+  services/     # capas de acceso a datos / cloudinary
+  types/        # tipos
+  utils/        # utilidades
+```

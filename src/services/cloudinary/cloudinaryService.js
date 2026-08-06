@@ -6,15 +6,15 @@
  *
  * Required environment variables in .env.local:
  *   VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
- *   VITE_CLOUDINARY_UPLOAD_PRESET=patynails_works
+ *   VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
  *
  * NOTE: Image deletion is NOT implemented here. Cloudinary's delete API
  * requires an API Secret which must never be exposed on the frontend.
  * Deletion will be handled via Firebase Cloud Functions in a future phase.
  */
 
-const FALLBACK_CLOUD_NAME = 'trugj88o'
-const FALLBACK_UPLOAD_PRESET = 'patynails_uploads'
+const FALLBACK_CLOUD_NAME = ''
+const FALLBACK_UPLOAD_PRESET = ''
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || FALLBACK_CLOUD_NAME
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || FALLBACK_UPLOAD_PRESET
@@ -49,7 +49,7 @@ function validateFile(file) {
  * @param {number} retries - Number of retries left
  * @returns {Promise<{ publicId: string, secureUrl: string }>}
  */
-export async function uploadImage(file, folder = 'patynails/works', onProgress, retries = 2) {
+export async function uploadImage(file, folder = '', onProgress, retries = 2) {
   if (!CLOUD_NAME || !UPLOAD_PRESET) {
     throw new Error(
       'Cloudinary no está configurado. Agregá VITE_CLOUDINARY_CLOUD_NAME y VITE_CLOUDINARY_UPLOAD_PRESET en .env.local'
