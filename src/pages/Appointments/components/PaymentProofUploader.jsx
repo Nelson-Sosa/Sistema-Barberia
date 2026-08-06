@@ -3,7 +3,7 @@ import { Upload, X, CheckCircle, AlertCircle } from 'lucide-react'
 import { uploadImage } from '@/services/cloudinary/cloudinaryService'
 import { cn } from '@/utils/cn'
 
-// Only allow image formats â€” no PDF, Word, Excel.
+// Only allow image formats — no PDF, Word, Excel.
 // Reasons: instant preview, smaller size, mobile-friendly, Cloudinary-compatible.
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 const ALLOWED_EXTENSIONS = '.jpg, .jpeg, .png, .webp'
@@ -18,9 +18,9 @@ const CLOUDINARY_FOLDER = 'comprobantes'
  * Handles: selection, preview, client-side validation, Cloudinary upload, progress.
  *
  * Props:
- *   onUploaded({ publicId, secureUrl }) â€” called when Cloudinary upload succeeds
- *   onClear()                           â€” called when the user removes the selected file
- *   disabled                            â€” disables all interactions
+ *   onUploaded({ publicId, secureUrl }) — called when Cloudinary upload succeeds
+ *   onClear()                           — called when the user removes the selected file
+ *   disabled                            — disables all interactions
  *
  * @param {{ onUploaded: Function, onClear: Function, disabled?: boolean }} props
  */
@@ -35,10 +35,10 @@ export default function PaymentProofUploader({ onUploaded, onClear, disabled = f
 
   const validateFile = (f) => {
     if (!ALLOWED_TYPES.includes(f.type)) {
-      return `Formato no permitido. UsÃ¡ JPG, PNG o WEBP.`
+      return `Formato no permitido. Usá JPG, PNG o WEBP.`
     }
     if (f.size > MAX_SIZE_BYTES) {
-      return `La imagen es demasiado grande. MÃ¡ximo ${MAX_SIZE_MB} MB.`
+      return `La imagen es demasiado grande. Máximo ${MAX_SIZE_MB} MB.`
     }
     return null
   }
@@ -68,7 +68,7 @@ export default function PaymentProofUploader({ onUploaded, onClear, disabled = f
       setUploaded(result)
       onUploaded?.(result)
     } catch (err) {
-      setError(err.message || 'Error al subir el comprobante. IntentÃ¡ de nuevo.')
+      setError(err.message || 'Error al subir el comprobante. Intentá de nuevo.')
       setFile(null)
       setPreview(null)
     } finally {
@@ -121,10 +121,10 @@ export default function PaymentProofUploader({ onUploaded, onClear, disabled = f
           </div>
           <div>
             <p className="text-sm font-medium text-brand-text">
-              SeleccionÃ¡ o arrastrÃ¡ tu comprobante
+              Seleccioná o arrastrá tu comprobante
             </p>
             <p className="mt-0.5 text-xs text-brand-text-muted">
-              {ALLOWED_EXTENSIONS} Â· MÃ¡x. {MAX_SIZE_MB} MB
+              {ALLOWED_EXTENSIONS} · Máx. {MAX_SIZE_MB} MB
             </p>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function PaymentProofUploader({ onUploaded, onClear, disabled = f
           {/* Uploading overlay with progress bar */}
           {uploading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50 backdrop-blur-sm">
-              <p className="text-sm font-medium text-white">Subiendo comprobanteâ€¦</p>
+              <p className="text-sm font-medium text-white">Subiendo comprobante…</p>
               <div className="w-3/4 overflow-hidden rounded-full bg-white/20 h-2">
                 <div
                   className="h-full rounded-full bg-brand-primary transition-all duration-300"

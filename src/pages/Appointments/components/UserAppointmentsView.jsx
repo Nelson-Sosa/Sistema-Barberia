@@ -47,7 +47,7 @@ export default function UserAppointmentsView() {
   const handleReplaceProof = (appointmentId, proof) => {
     replaceProof({ id: appointmentId, proof }, {
       onSuccess: () => {
-        toast.success('Comprobante enviado. Esperando revisiÃ³n.')
+        toast.success('Comprobante enviado. Esperando revisión.')
         setReplacingProofFor(null)
       },
       onError: () => toast.error('No se pudo enviar el comprobante'),
@@ -66,24 +66,24 @@ export default function UserAppointmentsView() {
   const handleOpenModal = () => { setSelectedServiceId(null); setIsModalOpen(true) }
   const handleCloseModal = () => { setIsModalOpen(false); setTimeout(() => setSelectedServiceId(null), 300) }
 
-  // â”€â”€ Payment status badge
+  // ── Payment status badge
   const getPaymentBadge = (payment) => {
     if (!payment?.enabled) return null
     switch (payment.status) {
       case PAYMENT_STATUS.PENDING_PROOF:
-        return <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-500">SeÃ±a pendiente</span>
+        return <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-500">Seña pendiente</span>
       case PAYMENT_STATUS.PROOF_SUBMITTED:
         return <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-500">Comprobante enviado</span>
       case PAYMENT_STATUS.APPROVED:
-        return <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-500">SeÃ±a aprobada</span>
+        return <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-500">Seña aprobada</span>
       case PAYMENT_STATUS.REJECTED:
-        return <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-500">SeÃ±a rechazada</span>
+        return <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-500">Seña rechazada</span>
       default:
         return null
     }
   }
 
-  // â”€â”€ Appointment status badge
+  // ── Appointment status badge
   const getStatusBadge = (status) => {
     switch (status) {
       case APPOINTMENT_STATUS.PENDING:
@@ -95,7 +95,7 @@ export default function UserAppointmentsView() {
       case APPOINTMENT_STATUS.CANCELLED:
         return <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-500">Cancelado</span>
       case APPOINTMENT_STATUS.NO_SHOW:
-        return <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-medium text-orange-500">No asistiÃ³</span>
+        return <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-medium text-orange-500">No asistió</span>
       default:
         return <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-xs font-medium text-slate-500">{status}</span>
     }
@@ -103,13 +103,13 @@ export default function UserAppointmentsView() {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      {/* â”€â”€ Phone missing alert */}
+      {/* ── Phone missing alert */}
       {!userProfile?.phone && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
           <div className="flex items-start sm:items-center gap-3">
             <Phone className="h-5 w-5 flex-shrink-0 text-amber-400 mt-0.5 sm:mt-0" />
             <p className="text-sm text-amber-300">
-              <strong>CompletÃ¡ tu nÃºmero de telÃ©fono</strong> para recibir recordatorios de tus turnos por WhatsApp.
+              <strong>Completá tu número de teléfono</strong> para recibir recordatorios de tus turnos por WhatsApp.
             </p>
           </div>
           <Button
@@ -123,12 +123,12 @@ export default function UserAppointmentsView() {
         </div>
       )}
 
-      {/* â”€â”€ Header */}
+      {/* ── Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-brand-text">Mis Turnos</h1>
           <p className="mt-1 text-sm text-brand-text-muted">
-            RevisÃ¡ tu historial y prÃ³ximos turnos agendados.
+            Revisá tu historial y próximos turnos agendados.
           </p>
         </div>
         <Button leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenModal}>
@@ -136,7 +136,7 @@ export default function UserAppointmentsView() {
         </Button>
       </div>
 
-      {/* â”€â”€ Appointments List */}
+      {/* ── Appointments List */}
       <div className="flex-1 space-y-4">
         {isLoading ? (
           <div className="flex h-40 items-center justify-center">
@@ -172,18 +172,18 @@ export default function UserAppointmentsView() {
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="font-mono text-brand-text">{appointment.time} hs</span>
-                      <span>â€¢</span>
+                      <span>•</span>
                       <span>{formatCurrency(servicePriceMap[appointment.serviceId] ?? appointment.price)}</span>
                     </span>
                   </div>
 
-                  {/* Payment badge â€” independent of appointment status */}
+                  {/* Payment badge — independent of appointment status */}
                   {pmt?.enabled && (
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       {getPaymentBadge(pmt)}
                       {pmt.amount > 0 && (
                         <span className="text-xs text-brand-text-muted">
-                          SeÃ±a: {formatCurrency(pmt.amount)}
+                          Seña: {formatCurrency(pmt.amount)}
                         </span>
                       )}
                       {/* View proof link */}
@@ -254,8 +254,8 @@ export default function UserAppointmentsView() {
         ) : (
           <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-brand-border bg-brand-bg">
             <CalendarDays className="mb-3 h-10 w-10 text-brand-text-muted" />
-            <p className="text-lg font-medium text-brand-text">AÃºn no tenÃ©s turnos</p>
-            <p className="mt-1 text-sm text-brand-text-muted">ExplorÃ¡ nuestros servicios y reservÃ¡ tu primer turno.</p>
+            <p className="text-lg font-medium text-brand-text">Aún no tenés turnos</p>
+            <p className="mt-1 text-sm text-brand-text-muted">Explorá nuestros servicios y reservá tu primer turno.</p>
             <Button className="mt-4" variant="secondary" onClick={handleOpenModal}>
               Reservar Turno
             </Button>

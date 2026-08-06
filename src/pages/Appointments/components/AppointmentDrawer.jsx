@@ -68,7 +68,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
 
   const handleReject = () => {
     if (!rejectReason.trim()) {
-      toast.error('EscribÃ­ un motivo para el rechazo')
+      toast.error('Escribí un motivo para el rechazo')
       return
     }
     rejectPayment({ id: appointment.id, adminUid: user?.uid, reason: rejectReason }, {
@@ -145,7 +145,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
               </p>
             )}
             {!appointment.clientPhone && (
-              <p className="mt-2 text-xs text-brand-text-muted">Sin telÃ©fono registrado</p>
+              <p className="mt-2 text-xs text-brand-text-muted">Sin teléfono registrado</p>
             )}
           </div>
 
@@ -172,7 +172,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
             <Scissors className="h-4 w-4 mt-0.5 text-brand-text-muted shrink-0" />
             <div>
               <p className="text-sm font-medium text-brand-text">{appointment.serviceName}</p>
-              <p className="text-xs text-brand-text-muted mt-px">DuraciÃ³n: {formatDuration(safeDuration)}</p>
+              <p className="text-xs text-brand-text-muted mt-px">Duración: {formatDuration(safeDuration)}</p>
             </div>
           </div>
 
@@ -190,13 +190,13 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
             </div>
           </div>
 
-          {/* â”€â”€ Payment Section (only when seÃ±a enabled) */}
+          {/* ── Payment Section (only when seña enabled) */}
           {hasPayment && (
             <div className="rounded-xl border border-brand-border bg-brand-bg overflow-hidden">
               {/* Section header */}
               <div className="flex items-center gap-2 border-b border-brand-border px-3 py-2.5 bg-brand-card">
                 <Banknote className="h-4 w-4 text-brand-primary shrink-0" />
-                <p className="text-xs font-semibold text-brand-text uppercase tracking-wider">Pago de seÃ±a</p>
+                <p className="text-xs font-semibold text-brand-text uppercase tracking-wider">Pago de seña</p>
               </div>
 
               <div className="p-3 space-y-3">
@@ -211,7 +211,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                     <p className="text-sm font-medium text-brand-text">{pmt.percentage}%</p>
                   </div>
                   <div>
-                    <p className="text-xs text-brand-text-muted">SeÃ±a</p>
+                    <p className="text-xs text-brand-text-muted">Seña</p>
                     <p className="text-sm font-semibold text-amber-400">{formatCurrency(pmt.amount)}</p>
                   </div>
                 </div>
@@ -248,12 +248,12 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                       className="flex items-center gap-1 text-xs text-brand-primary hover:underline"
                     >
                       <ExternalLink className="h-3 w-3" />
-                      Ver en tamaÃ±o completo
+                      Ver en tamaño completo
                     </a>
                   </div>
                 )}
 
-                {/* Admin actions â€” only when proof is submitted and not yet reviewed */}
+                {/* Admin actions — only when proof is submitted and not yet reviewed */}
                 {canApproveOrReject && (
                   <div className="space-y-2 pt-1">
                     {/* Approve */}
@@ -322,7 +322,7 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
                 {pmt.status === PAYMENT_STATUS.APPROVED && (
                   <div className="flex items-center gap-1.5 text-xs text-emerald-400">
                     <CheckCircle className="h-3.5 w-3.5" />
-                    Pago aprobado. Turno confirmado automÃ¡ticamente.
+                    Pago aprobado. Turno confirmado automáticamente.
                   </div>
                 )}
               </div>
