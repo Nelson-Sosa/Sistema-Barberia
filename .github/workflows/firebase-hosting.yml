@@ -41,6 +41,5 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          # TODO: Set your new Firebase Hosting project ID for the deployment.
-      projectId: replace-with-your-firebase-project-id
+          projectId: sistema-barberia-23d77
           channelId: live
