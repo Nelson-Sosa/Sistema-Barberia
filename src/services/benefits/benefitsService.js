@@ -1,6 +1,7 @@
 import {
-  doc, getDoc, updateDoc, addDoc, collection, query, where,
-  getDocs, orderBy, limit, runTransaction, onSnapshot, Timestamp, serverTimestamp,
+  doc, getDoc, updateDoc, collection, query, where,
+  getDocs, orderBy, limit, runTransaction, onSnapshot, Timestamp,
+  serverTimestamp, getCountFromServer,
 } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { COLLECTIONS, BENEFITS } from '@/constants/app'
@@ -19,18 +20,65 @@ function normalizePhone(phone) {
 }
 
 /**
+ * Build the reward entry granted to a client, snapshotting the current program
+ * config so later config changes don't alter already-granted rewards.
+ * @param {Object} benefitsSettings
+ * @returns {Object} reward entry shape
+ */
+function buildRewardEntry(benefitsSettings) {
+  const grantedAt = Timestamp.now()
+  const rewardValidDays = benefitsSettings.rewardValidDays ?? 0
+  let expiresAt = null
+  if (rewardValidDays > 0) {
+    expiresAt = Timestamp.fromMillis(
+      grantedAt.toMillis() + rewardValidDays * 24 * 60 * 60 * 1000
+    )
+  }
+  return {
+    type: benefitsSettings.rewardType ?? BENEFITS.REWARD_TYPE,
+    value: benefitsSettings.rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE,
+    grantedAt,
+    expiresAt,
+    redeemed: false,
+    redeemedAt: null,
+    redeemedBy: null,
+  }
+}
+
+/**
+ * Return the rewards that are still redeemable (not redeemed, not expired).
+ * @param {Array|undefined} rewards
+ * @returns {Array}
+ */
+function availableRewards(rewards) {
+  if (!Array.isArray(rewards)) return []
+  const now = Timestamp.now()
+  return rewards.filter((r) => {
+    if (!r || r.redeemed) return false
+    if (r.expiresAt) {
+      const exp = r.expiresAt.toDate ? r.expiresAt.toDate() : new Date(r.expiresAt.seconds * 1000)
+      if (exp.getTime() <= now.toMillis()) return false
+    }
+    return true
+  })
+}
+
+/**
  * Process a completed visit for the benefits program.
  * Called when an appointment transitions to status "done".
  * - Marks the appointment as processed (prevents double-processing)
  * - Reads the client's current totalVisits (already incremented by incomeService)
- * - If totalVisits >= nextRewardAt, grants a 20% discount
+ * - If totalVisits >= nextRewardAt, grants a reward (discount or free service,
+ *   configured at program level) and snapshots it into the rewards array
+ * - Honors repeatEnabled (keep granting at each threshold vs. grant once)
+ * - Lazily expires rewards past their validity window
  * - Records everything atomically in a transaction
  *
  * @param {string} clientId
  * @param {string} appointmentId
  * @returns {Promise<{rewardGranted: boolean, currentVisits: number, nextRewardAt: number, freeServices: number}|null>}
  *
- * NOTE: `freeServices` in the DB represents the count of available 20% discounts.
+ * NOTE: `freeServices` in the DB represents the count of currently available rewards.
  */
 export async function processCompletedVisit(clientId, appointmentId) {
   if (!clientId || !appointmentId) return null
@@ -64,11 +112,23 @@ export async function processCompletedVisit(clientId, appointmentId) {
 
       const currentVisits = clientData.totalVisits ?? 0
       let freeServices = clientData.freeServices ?? 0
+      let rewards = Array.isArray(clientData.rewards) ? clientData.rewards : []
       let nextRewardAt = clientData.nextRewardAt ?? rewardEvery
       let lastRewardAt = clientData.lastRewardAt ?? null
       let rewardGranted = false
 
-      if (currentVisits >= nextRewardAt) {
+      // Lazy cleanup: drop rewards that passed their validity window.
+      const validRewards = availableRewards(rewards)
+      if (validRewards.length !== rewards.length) {
+        rewards = validRewards
+        freeServices = validRewards.length
+      }
+
+      const repeatEnabled = benefitsSettings.repeatEnabled ?? true
+      const alreadyClaimed = clientData.rewardClaimed === true
+
+      if (currentVisits >= nextRewardAt && (repeatEnabled || !alreadyClaimed)) {
+        rewards.push(buildRewardEntry(benefitsSettings))
         freeServices += 1
         lastRewardAt = Timestamp.now()
         nextRewardAt = nextRewardAt + rewardIncrement
@@ -77,8 +137,10 @@ export async function processCompletedVisit(clientId, appointmentId) {
 
       transaction.update(clientRef, {
         freeServices,
+        rewards,
         nextRewardAt,
         lastRewardAt,
+        ...(rewardGranted && !repeatEnabled ? { rewardClaimed: true } : {}),
         updatedAt: serverTimestamp(),
       })
 
@@ -90,7 +152,8 @@ export async function processCompletedVisit(clientId, appointmentId) {
         appointmentId,
         type: 'visit',
         visitNumber: currentVisits,
-        rewardType: rewardGranted ? 'discount' : null,
+        rewardType: rewardGranted ? (benefitsSettings.rewardType ?? BENEFITS.REWARD_TYPE) : null,
+        rewardValue: rewardGranted ? (benefitsSettings.rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE) : null,
         rewardGranted,
         earnedAt: Timestamp.now(),
         redeemed: false,
@@ -107,8 +170,8 @@ export async function processCompletedVisit(clientId, appointmentId) {
 }
 
 /**
- * Redeem a 20% discount for a client.
- * Deducts one discount and records the redemption in history.
+ * Redeem a reward (discount or free service) for a client.
+ * Deducts one available reward and records the redemption in history.
  *
  * @param {string} clientId
  * @param {string} adminUid
@@ -116,6 +179,8 @@ export async function processCompletedVisit(clientId, appointmentId) {
  */
 export async function redeemDiscount(clientId, adminUid) {
   if (!clientId) return { success: false }
+
+  const benefitsSettings = await getBenefitsSettings()
 
   try {
     return await runTransaction(db, async (transaction) => {
@@ -132,12 +197,38 @@ export async function redeemDiscount(clientId, adminUid) {
         clientData = clientSnap.data()
       }
 
-      if ((clientData.freeServices ?? 0) < 1) return { success: false }
+      const now = Timestamp.now()
+      let rewards = Array.isArray(clientData.rewards) ? clientData.rewards : []
+      let freeServices = clientData.freeServices ?? 0
 
-      const newFreeServices = clientData.freeServices - 1
+      const validRewards = availableRewards(rewards)
+      const hasRewardsArray = rewards.length > 0
+      const available = hasRewardsArray ? validRewards.length : freeServices
+
+      if (available < 1) return { success: false }
+
+      if (hasRewardsArray) {
+        // Mark the oldest available reward as redeemed (respecting expiry)
+        let marked = false
+        rewards = rewards.map((r) => {
+          if (marked || !r || r.redeemed) return r
+          if (r.expiresAt) {
+            const exp = r.expiresAt.toDate ? r.expiresAt.toDate() : new Date(r.expiresAt.seconds * 1000)
+            if (exp.getTime() <= now.toMillis()) return r
+          }
+          marked = true
+          return { ...r, redeemed: true, redeemedAt: now, redeemedBy: adminUid || null }
+        })
+        if (!marked) return { success: false }
+        freeServices = Math.max(validRewards.length - 1, 0)
+      } else {
+        // Legacy client (no rewards array yet): plain counter decrement
+        freeServices = freeServices - 1
+      }
 
       transaction.update(clientRef, {
-        freeServices: newFreeServices,
+        freeServices,
+        rewards,
         updatedAt: serverTimestamp(),
       })
 
@@ -147,7 +238,8 @@ export async function redeemDiscount(clientId, adminUid) {
         appointmentId: null,
         type: 'redemption',
         visitNumber: clientData.totalVisits ?? 0,
-        rewardType: 'discount',
+        rewardType: benefitsSettings.rewardType ?? BENEFITS.REWARD_TYPE,
+        rewardValue: benefitsSettings.rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE,
         rewardGranted: true,
         earnedAt: Timestamp.now(),
         redeemed: true,
@@ -155,7 +247,7 @@ export async function redeemDiscount(clientId, adminUid) {
         redeemedBy: adminUid || null,
       })
 
-      return { success: true, freeServices: newFreeServices }
+      return { success: true, freeServices }
     })
   } catch (err) {
     console.error('[benefits] redeemDiscount error:', err)
@@ -188,6 +280,28 @@ export async function getLastBenefitsEvent(clientId) {
   const snap = await getDocs(q)
   if (snap.empty) return null
   return { id: snap.docs[0].id, ...snap.docs[0].data() }
+}
+
+/**
+ * Aggregate counters for the admin benefits stats panel.
+ * Uses Firestore count aggregation (no full history download).
+ * @returns {Promise<{granted: number, redeemed: number}>}
+ */
+export async function getBenefitsCounts() {
+  try {
+    const historyRef = collection(db, COLLECTIONS.LOYALTY_HISTORY)
+    const [grantedSnap, redeemedSnap] = await Promise.all([
+      getCountFromServer(query(historyRef, where('rewardGranted', '==', true))),
+      getCountFromServer(query(historyRef, where('type', '==', 'redemption'))),
+    ])
+    return {
+      granted: grantedSnap.data().count ?? 0,
+      redeemed: redeemedSnap.data().count ?? 0,
+    }
+  } catch (err) {
+    console.error('[benefits] getBenefitsCounts error:', err)
+    return { granted: 0, redeemed: 0 }
+  }
 }
 
 /**
@@ -274,11 +388,23 @@ export async function processGuestCompletedVisit(phone, appointmentId) {
 
       const currentVisits = (clientData.totalVisits ?? 0) + 1
       let freeServices = clientData.freeServices ?? 0
+      let rewards = Array.isArray(clientData.rewards) ? clientData.rewards : []
       let nextRewardAt = clientData.nextRewardAt ?? rewardEvery
       let lastRewardAt = clientData.lastRewardAt ?? null
       let rewardGranted = false
 
-      if (currentVisits >= nextRewardAt) {
+      // Lazy cleanup: drop rewards that passed their validity window.
+      const validRewards = availableRewards(rewards)
+      if (validRewards.length !== rewards.length) {
+        rewards = validRewards
+        freeServices = validRewards.length
+      }
+
+      const repeatEnabled = benefitsSettings.repeatEnabled ?? true
+      const alreadyClaimed = clientData.rewardClaimed === true
+
+      if (currentVisits >= nextRewardAt && (repeatEnabled || !alreadyClaimed)) {
+        rewards.push(buildRewardEntry(benefitsSettings))
         freeServices += 1
         lastRewardAt = Timestamp.now()
         nextRewardAt = nextRewardAt + rewardIncrement
@@ -292,8 +418,10 @@ export async function processGuestCompletedVisit(phone, appointmentId) {
         notes: clientData.notes || '',
         totalVisits: currentVisits,
         freeServices,
+        rewards,
         nextRewardAt,
         lastRewardAt,
+        ...(rewardGranted && !repeatEnabled ? { rewardClaimed: true } : {}),
         whatsappOptIn: clientData.whatsappOptIn ?? false,
         phoneVerified: false,
         remindersEnabled: false,
@@ -318,7 +446,8 @@ export async function processGuestCompletedVisit(phone, appointmentId) {
         appointmentId,
         type: 'visit',
         visitNumber: currentVisits,
-        rewardType: rewardGranted ? 'discount' : null,
+        rewardType: rewardGranted ? (benefitsSettings.rewardType ?? BENEFITS.REWARD_TYPE) : null,
+        rewardValue: rewardGranted ? (benefitsSettings.rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE) : null,
         rewardGranted,
         earnedAt: Timestamp.now(),
         redeemed: false,
@@ -371,8 +500,10 @@ export async function linkGuestHistory(phone, uid) {
       await updateDoc(userRef, {
         totalVisits: (user.totalVisits ?? 0) + (guest.totalVisits ?? 0),
         freeServices: (user.freeServices ?? 0) + (guest.freeServices ?? 0),
+        rewards: [...(user.rewards ?? []), ...(guest.rewards ?? [])],
         nextRewardAt: guest.nextRewardAt ?? user.nextRewardAt ?? BENEFITS.DEFAULT_REWARD_EVERY_VISITS,
         lastRewardAt: guest.lastRewardAt ?? user.lastRewardAt ?? null,
+        rewardClaimed: (user.rewardClaimed === true) || (guest.rewardClaimed === true),
         linkedFromPhone: clientPhone,
         updatedAt: serverTimestamp(),
       })

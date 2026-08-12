@@ -39,7 +39,7 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
     <>
       <div className="group flex flex-col overflow-hidden rounded-2xl border border-brand-border bg-brand-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.18)]">
         {/* ── Image area ────────────────────────────────────────────────── */}
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-primary">
+        <div className="relative aspect-[16/9] w-full overflow-hidden bg-brand-primary max-md:aspect-[16/7]">
           {service.imageUrl ? (
             <img
               src={service.imageUrl}
@@ -49,7 +49,7 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <Scissors className="h-14 w-14 text-brand-gold/70 transition-transform duration-300 group-hover:scale-110" />
+              <Scissors className="h-14 w-14 text-brand-gold/70 transition-transform duration-300 group-hover:scale-110 max-md:h-10 max-md:w-10" />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </div>
           )}
@@ -64,9 +64,6 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
           {/* Admin actions */}
           {isAdmin && (
             <div className="absolute right-3 top-3 flex items-center gap-1.5">
-              <Badge variant={active ? 'success' : 'default'} size="sm" dot>
-                {active ? 'Activo' : 'Inactivo'}
-              </Badge>
               <button
                 onClick={onEdit}
                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/55 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
@@ -86,22 +83,29 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
         </div>
 
         {/* ── Body ──────────────────────────────────────────────────────── */}
-        <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-1 flex-col gap-2 p-3.5 sm:gap-2.5 sm:p-4 max-md:gap-1.5 max-md:p-3">
           <div>
-            <h3 className="text-base font-semibold leading-snug text-brand-text">{service.name}</h3>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="text-sm font-semibold leading-snug text-brand-text sm:text-base max-md:text-[15px]">{service.name}</h3>
+              {isAdmin && (
+                <Badge variant={active ? 'success' : 'default'} size="sm" dot className="shrink-0">
+                  {active ? 'Activo' : 'Inactivo'}
+                </Badge>
+              )}
+            </div>
             {service.description && (
-              <p className="mt-1 text-sm leading-relaxed text-brand-text-muted line-clamp-2">
+              <p className="mt-0.5 text-xs leading-relaxed text-brand-text-muted line-clamp-2 sm:text-sm max-md:line-clamp-1 max-md:mt-0">
                 {service.description}
               </p>
             )}
           </div>
 
-          <div className="mt-auto flex items-center justify-between border-t border-brand-border pt-3">
+          <div className="mt-auto flex items-center justify-between border-t border-brand-border pt-2.5 sm:pt-3 max-md:pt-2">
             <div className="flex items-center gap-1.5 text-xs text-brand-text-muted">
               <Clock className="h-3.5 w-3.5" />
               <span>{service.duration} min</span>
             </div>
-            <span className="text-base font-bold text-brand-text">
+            <span className="text-sm font-bold text-brand-text sm:text-base">
               {formatCurrency(service.price)}
             </span>
           </div>
@@ -109,14 +113,16 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
           {isAdmin ? (
             <Button
               variant={active ? 'secondary' : 'outline'}
-              className="w-full"
+              className="w-full max-md:h-11"
+              size="sm"
               onClick={handleToggleActive}
             >
               {active ? 'Desactivar' : 'Activar'}
             </Button>
           ) : (
             <Button
-              className={cn('w-full', !active && 'opacity-100')}
+              size="sm"
+              className={cn('w-full max-md:h-11', !active && 'opacity-100')}
               onClick={onBook}
               disabled={!active}
             >

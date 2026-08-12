@@ -1,4 +1,4 @@
-import { Gift, Users, Sparkles, ChevronRight } from 'lucide-react'
+import { Gift, Users, ChevronRight } from 'lucide-react'
 import { useBenefitsSettings } from '@/hooks/useBenefits'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/routes/routes'
@@ -10,6 +10,7 @@ function BenefitsCard() {
   if (!settings?.enabled) return null
 
   const rewardEvery = settings.rewardEveryVisits ?? 6
+  const rewardLabel = settings.rewardDescription || `${settings.rewardValue ?? 20}% de descuento`
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-brand-border bg-brand-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.18)] sm:p-5">
@@ -23,14 +24,14 @@ function BenefitsCard() {
           <div>
             <p className="text-sm font-medium text-brand-text">Programa de Beneficios</p>
             <p className="text-[11px] text-brand-text-muted">
-              {rewardEvery} visitas = 20% descuento
+              {rewardEvery} visitas = {rewardLabel}
             </p>
           </div>
         </div>
 
         <p className="rounded-xl border border-brand-border bg-brand-alt-row/60 px-4 py-3 text-xs leading-relaxed text-brand-text-muted sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
           Tus clientes acumulan una visita cada vez que completan un turno.
-          Al llegar a {rewardEvery} visitas reciben automáticamente un 20% de descuento.
+          Al llegar a {rewardEvery} visitas reciben automáticamente {rewardLabel}.
         </p>
 
         <button

@@ -1,5 +1,6 @@
 import { TrendingUp, Users, CalendarDays, Landmark, Clock, ChevronRight } from 'lucide-react'
 import BenefitsCard from './components/BenefitsCard'
+import BenefitsStatsCard from './components/BenefitsStatsCard'
 import { useAuth } from '@/hooks/useAuth'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
@@ -152,6 +153,9 @@ function DashboardPage() {
 
           {/* ── Programa de Beneficios ──────────────────────────────────── */}
           <BenefitsCard />
+
+          {/* ── Estadísticas de Beneficios ──────────────────────────────── */}
+          <BenefitsStatsCard />
 
           {/* ── Próximo Turno ───────────────────────────────────────────── */}
           <Card>

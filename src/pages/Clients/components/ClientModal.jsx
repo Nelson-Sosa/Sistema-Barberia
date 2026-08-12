@@ -1,4 +1,3 @@
-import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -7,6 +6,9 @@ import { useCreateClient, useUpdateClient } from '@/hooks/useClients'
 import { formatPhoneDisplayPY, formatPhoneStoragePY } from '@/utils/formatters'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
+import Modal from '@/components/ui/Modal'
+import FormGrid from '@/components/ui/FormGrid'
+import FormActions from '@/components/ui/FormActions'
 
 const schema = z.object({
   name: z.string().min(2, 'El nombre es obligatorio'),
@@ -69,95 +71,90 @@ function ClientModal({ isOpen, onClose, client }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-      
-      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-brand-pastel bg-brand-card p-4 sm:p-6 shadow-2xl">
-        <button 
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-brand-text-muted hover:bg-brand-pastel hover:text-brand-primary z-50"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
-        <h2 className="text-xl font-bold text-brand-text">
-          {client ? 'Editar Cliente' : 'Nuevo Cliente'}
-        </h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={client ? 'Editar Cliente' : 'Nuevo Cliente'}
+      maxWidthClass="max-w-md"
+      footer={
+        <FormActions>
+          <Button variant="ghost" onClick={onClose} disabled={isCreating || isUpdating}>
+            Cancelar
+          </Button>
+          <Button type="submit" form="client-form" loading={isCreating || isUpdating}>
+            Guardar
+          </Button>
+        </FormActions>
+      }
+    >
+      <form id="client-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <Input 
+          label="Nombre Completo" 
+          placeholder="Ej. Ana Pérez"
+          error={errors.name?.message}
+          {...register('name')}
+        />
         
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
+        <FormGrid>
           <Input 
-            label="Nombre Completo" 
-            placeholder="Ej. Ana Pérez"
-            error={errors.name?.message}
-            {...register('name')}
+            label="Teléfono / WhatsApp" 
+            placeholder="Ej. 0986321987"
+            error={errors.phone?.message}
+            {...register('phone')}
           />
-          
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input 
-              label="Teléfono / WhatsApp" 
-              placeholder="Ej. 0986321987"
-              error={errors.phone?.message}
-              {...register('phone')}
+          <Input 
+            label="Número alternativo" 
+            placeholder="Ej. 0986321987"
+            error={errors.whatsapp?.message}
+            {...register('whatsapp')}
+          />
+        </FormGrid>
+
+        {/* ── WhatsApp/Contact admin controls ─────────────────────────────── */}
+        <div className="rounded-lg border border-brand-pastel bg-brand-bg p-4 space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-text-muted">Estado WhatsApp</p>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-4 w-4 shrink-0 rounded border-brand-pastel bg-white text-brand-primary focus:ring-brand-primary"
+              {...register('whatsappOptIn')}
+              disabled={!phoneValue?.trim()}
             />
-            <Input 
-              label="Número alternativo" 
-              placeholder="Ej. 0986321987"
-              error={errors.whatsapp?.message}
-              {...register('whatsapp')}
+            <span className="text-sm text-brand-text-muted">Desea recibir recordatorios por WhatsApp</span>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-4 w-4 shrink-0 rounded border-brand-pastel bg-white text-brand-success focus:ring-brand-success"
+              {...register('phoneVerified')}
+              disabled={!phoneValue?.trim()}
             />
-          </div>
+            <span className="text-sm text-brand-text-muted">☑ Número verificado</span>
+          </label>
 
-          {/* ── WhatsApp/Contact admin controls ─────────────────────────────── */}
-          <div className="rounded-lg border border-brand-pastel bg-brand-bg p-4 space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-text-muted">Estado WhatsApp</p>
-
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-brand-pastel bg-white text-brand-primary focus:ring-brand-primary"
-                {...register('whatsappOptIn')}
-                disabled={!phoneValue?.trim()}
-              />
-              <span className="text-sm text-brand-text-muted">Desea recibir recordatorios por WhatsApp</span>
-            </label>
-
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-brand-pastel bg-white text-brand-success focus:ring-brand-success"
-                {...register('phoneVerified')}
-                disabled={!phoneValue?.trim()}
-              />
-              <span className="text-sm text-brand-text-muted">☑ Número verificado</span>
-            </label>
-
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-brand-pastel bg-white text-sky-500 focus:ring-sky-500"
-                {...register('remindersEnabled')}
-                disabled={!phoneValue?.trim()}
-              />
-              <span className="text-sm text-brand-text-muted">Recordatorios activos</span>
-            </label>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-brand-text-muted">Notas (opcional)</label>
-            <textarea
-              className="min-h-[80px] w-full rounded-lg border border-brand-pastel bg-brand-bg p-3 text-sm text-brand-text placeholder-brand-text-muted focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
-              placeholder="Preferencias, alergias..."
-              {...register('notes')}
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-4 w-4 shrink-0 rounded border-brand-pastel bg-white text-sky-500 focus:ring-sky-500"
+              {...register('remindersEnabled')}
+              disabled={!phoneValue?.trim()}
             />
-          </div>
+            <span className="text-sm text-brand-text-muted">Recordatorios activos</span>
+          </label>
+        </div>
 
-          <div className="mt-4 flex justify-end gap-3">
-            <Button variant="ghost" onClick={onClose} disabled={isCreating || isUpdating}>Cancelar</Button>
-            <Button type="submit" loading={isCreating || isUpdating}>Guardar</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-brand-text-muted">Notas (opcional)</label>
+          <textarea
+            className="min-h-[80px] w-full rounded-lg border border-brand-pastel bg-brand-bg p-3 text-sm text-brand-text placeholder-brand-text-muted focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+            placeholder="Preferencias, alergias..."
+            {...register('notes')}
+          />
+        </div>
+      </form>
+    </Modal>
   )
 }
 

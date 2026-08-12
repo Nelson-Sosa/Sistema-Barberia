@@ -1,15 +1,14 @@
 ﻿import { useState } from 'react'
-import { X, Clock, Calendar, Scissors, Camera, Banknote, CheckCircle, XCircle, ExternalLink, UserRound, UserCheck, Phone } from 'lucide-react'
+import { X, Clock, Calendar, Scissors, Banknote, CheckCircle, XCircle, ExternalLink, UserRound, UserCheck, Phone } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import toast from 'react-hot-toast'
-import { APPOINTMENT_STATUS, STATUS_CONFIG, PAYMENT_STATUS } from '@/constants/app'
+import { STATUS_CONFIG, PAYMENT_STATUS } from '@/constants/app'
 import { useAuth } from '@/context/AuthContext'
 import { useApprovePayment, useRejectPayment } from '@/hooks/useAppointments'
 import { cn } from '@/utils/cn'
 import { formatCurrency } from '@/utils/formatters'
 import Button from '@/components/ui/Button'
-import AddWorkModal from '@/pages/Works/components/AddWorkModal'
 
 function toMinutes(time) {
   const [h, m] = time.split(':').map(Number)
@@ -33,7 +32,6 @@ const PAYMENT_STATUS_LABELS = {
 
 export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit, onStatusChange }) {
   const { user } = useAuth()
-  const [addWorkOpen, setAddWorkOpen] = useState(false)
   const [showRejectInput, setShowRejectInput] = useState(false)
   const [rejectReason, setRejectReason] = useState('')
 
@@ -332,16 +330,6 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
 
         {/* Actions */}
         <div className="border-t border-brand-border px-4 py-3 flex flex-col gap-2 shrink-0">
-          {appointment.status === APPOINTMENT_STATUS.DONE && (
-            <Button
-              variant="secondary"
-              onClick={() => setAddWorkOpen(true)}
-              className="w-full"
-              leftIcon={<Camera className="h-4 w-4" />}
-            >
-              Agregar trabajo
-            </Button>
-          )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cerrar
@@ -352,15 +340,6 @@ export default function AppointmentDrawer({ appointment, isOpen, onClose, onEdit
           </div>
         </div>
       </div>
-
-      {/* AddWork Modal */}
-      {addWorkOpen && (
-        <AddWorkModal
-          isOpen={addWorkOpen}
-          onClose={() => setAddWorkOpen(false)}
-          appointment={appointment}
-        />
-      )}
     </>
   )
 }

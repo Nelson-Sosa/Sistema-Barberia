@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react'
-import { X } from 'lucide-react'
 import { format } from 'date-fns'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,6 +18,8 @@ import { formatCurrency } from '@/utils/formatters'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import TimeSelect from '@/components/ui/TimeSelect'
+import Modal from '@/components/ui/Modal'
+import FormActions from '@/components/ui/FormActions'
 import { cn } from '@/utils/cn'
 
 const schema = z.object({
@@ -182,105 +183,100 @@ function NewAppointmentModal({ isOpen, onClose, initialDate, initialTime, appoin
   const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      
-      {/* Modal */}
-      <div className="relative w-full max-w-lg rounded-2xl border border-brand-border bg-brand-card p-4 sm:p-6 shadow-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto">
-        <button 
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-brand-text-muted hover:bg-brand-pastel/30 hover:text-brand-text z-50"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
-          <h2 className="text-xl font-bold text-brand-text">{isEditing ? 'Editar Turno' : 'Agendar Turno'}</h2>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          {/* Client Select */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-brand-text">Cliente</label>
-            <select
-              className={cn(
-                'h-10 w-full rounded-lg border bg-brand-bg px-3 text-sm text-brand-text',
-                errors.clientId ? 'border-red-500/50 focus:border-red-500' : 'border-brand-border focus:border-brand-primary focus:ring-1 focus:ring-brand-primary',
-                isEditing && 'opacity-70 cursor-not-allowed'
-              )}
-              disabled={loadingClients || isEditing}
-              {...register('clientId')}
-            >
-              <option value="">Seleccionar cliente...</option>
-              {clients?.map((c) => (
-                <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>
-              ))}
-            </select>
-            {errors.clientId && <p className="text-xs text-red-400">{errors.clientId.message}</p>}
-            {isEditing && <p className="text-xs text-brand-text-muted">El cliente no se puede modificar.</p>}
-          </div>
-
-          {/* Service Select */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-brand-text">Servicio</label>
-            <select
-              className={cn(
-                'h-10 w-full rounded-lg border bg-brand-bg px-3 text-sm text-brand-text',
-                errors.serviceId ? 'border-red-500/50 focus:border-red-500' : 'border-brand-border focus:border-brand-primary focus:ring-1 focus:ring-brand-primary'
-              )}
-              disabled={loadingServices}
-              {...register('serviceId')}
-            >
-              <option value="">Seleccionar servicio...</option>
-              {groupedServices?.length > 0 ? (
-                groupedServices.map((cat) => (
-                  <optgroup key={cat.id} label={cat.name}>
-                    {cat.services.map((s) => (
-                      <option key={s.id} value={s.id}>{s.name} - {formatCurrency(s.price)}</option>
-                    ))}
-                  </optgroup>
-                ))
-              ) : (
-                services?.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name} - {formatCurrency(s.price)}</option>
-                ))
-              )}
-            </select>
-            {errors.serviceId && <p className="text-xs text-red-400">{errors.serviceId.message}</p>}
-          </div>
-
-
-          {/* Date Input */}
-          <Input 
-            label="Fecha del turno" 
-            type="date" 
-            min={role === USER_ROLES.ADMIN ? undefined : minDate}
-            error={errors.date?.message}
-            {...register('date')}
-          />
-
-          {/* Time Input */}
-          <Controller
-            name="time"
-            control={control}
-            render={({ field }) => (
-              <TimeSelect
-                label="Hora del turno"
-                startHour={timeStartHour}
-                endHour={timeEndHour}
-                stepMinutes={businessSettings?.slotInterval || 30}
-                error={errors.time?.message}
-                {...field}
-              />
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditing ? 'Editar Turno' : 'Agendar Turno'}
+      maxWidthClass="max-w-lg"
+      footer={
+        <FormActions>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            Cancelar
+          </Button>
+          <Button type="submit" form="appointment-form" loading={isSubmitting || isPending}>
+            Guardar
+          </Button>
+        </FormActions>
+      }
+    >
+      <form id="appointment-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        {/* Client Select */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-brand-text">Cliente</label>
+          <select
+            className={cn(
+              'h-10 w-full rounded-lg border bg-brand-bg px-3 text-sm text-brand-text',
+              errors.clientId ? 'border-red-500/50 focus:border-red-500' : 'border-brand-border focus:border-brand-primary focus:ring-1 focus:ring-brand-primary',
+              isEditing && 'opacity-70 cursor-not-allowed'
             )}
-          />
+            disabled={loadingClients || isEditing}
+            {...register('clientId')}
+          >
+            <option value="">Seleccionar cliente...</option>
+            {clients?.map((c) => (
+              <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>
+            ))}
+          </select>
+          {errors.clientId && <p className="text-xs text-red-400">{errors.clientId.message}</p>}
+          {isEditing && <p className="text-xs text-brand-text-muted">El cliente no se puede modificar.</p>}
+        </div>
 
-          <div className="mt-4 flex justify-end gap-3">
-            <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>Cancelar</Button>
-            <Button type="submit" loading={isSubmitting || isPending}>Guardar</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Service Select */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-brand-text">Servicio</label>
+          <select
+            className={cn(
+              'h-10 w-full rounded-lg border bg-brand-bg px-3 text-sm text-brand-text',
+              errors.serviceId ? 'border-red-500/50 focus:border-red-500' : 'border-brand-border focus:border-brand-primary focus:ring-1 focus:ring-brand-primary'
+            )}
+            disabled={loadingServices}
+            {...register('serviceId')}
+          >
+            <option value="">Seleccionar servicio...</option>
+            {groupedServices?.length > 0 ? (
+              groupedServices.map((cat) => (
+                <optgroup key={cat.id} label={cat.name}>
+                  {cat.services.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name} - {formatCurrency(s.price)}</option>
+                  ))}
+                </optgroup>
+              ))
+            ) : (
+              services?.map((s) => (
+                <option key={s.id} value={s.id}>{s.name} - {formatCurrency(s.price)}</option>
+              ))
+            )}
+          </select>
+          {errors.serviceId && <p className="text-xs text-red-400">{errors.serviceId.message}</p>}
+        </div>
+
+
+        {/* Date Input */}
+        <Input 
+          label="Fecha del turno" 
+          type="date" 
+          min={role === USER_ROLES.ADMIN ? undefined : minDate}
+          error={errors.date?.message}
+          {...register('date')}
+        />
+
+        {/* Time Input */}
+        <Controller
+          name="time"
+          control={control}
+          render={({ field }) => (
+            <TimeSelect
+              label="Hora del turno"
+              startHour={timeStartHour}
+              endHour={timeEndHour}
+              stepMinutes={businessSettings?.slotInterval || 30}
+              error={errors.time?.message}
+              {...field}
+            />
+          )}
+        />
+      </form>
+    </Modal>
   )
 }
 

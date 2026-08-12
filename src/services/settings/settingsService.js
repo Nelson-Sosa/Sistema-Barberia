@@ -27,17 +27,19 @@ export async function getSettings() {
 
 export async function getBenefitsSettings() {
   const snap = await getDoc(settingsRef())
-  if (!snap.exists()) {
-    return {
-      enabled: true,
-      rewardEveryVisits: BENEFITS.DEFAULT_REWARD_EVERY_VISITS,
-      rewardType: BENEFITS.REWARD_TYPE,
-      rewardDescription: BENEFITS.REWARD_DESCRIPTION,
-      showProgress: true,
-    }
-  }
+  return mapBenefitsSettings(snap.exists() ? snap.data() : {})
+}
 
-  return mapBenefitsSettings(snap.data())
+/**
+ * Build a human-readable reward label from the reward type and value.
+ * e.g. discount 20 → "20% de descuento", free_service → "Servicio gratis".
+ * @param {string} rewardType
+ * @param {number} rewardValue
+ * @returns {string}
+ */
+export function buildRewardDescription(rewardType, rewardValue) {
+  if (rewardType === BENEFITS.REWARD_TYPES.FREE_SERVICE) return 'Servicio gratis'
+  return `${rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE}% de descuento`
 }
 
 /**
@@ -46,12 +48,18 @@ export async function getBenefitsSettings() {
  */
 function mapBenefitsSettings(data) {
   const benefitsProgram = data?.loyaltyProgram || {}
+  const rewardType = benefitsProgram.rewardType ?? BENEFITS.REWARD_TYPE
+  const rewardValue = benefitsProgram.rewardValue ?? BENEFITS.DEFAULT_REWARD_VALUE
   return {
     enabled: benefitsProgram.enabled ?? true,
+    accumulationType: benefitsProgram.accumulationType ?? BENEFITS.DEFAULT_ACCUMULATION_TYPE,
     rewardEveryVisits: benefitsProgram.rewardEveryVisits ?? BENEFITS.DEFAULT_REWARD_EVERY_VISITS,
     rewardIncrement: benefitsProgram.rewardIncrement ?? BENEFITS.DEFAULT_REWARD_INCREMENT,
-    rewardType: benefitsProgram.rewardType ?? BENEFITS.REWARD_TYPE,
-    rewardDescription: benefitsProgram.rewardDescription ?? BENEFITS.REWARD_DESCRIPTION,
+    rewardType,
+    rewardValue,
+    repeatEnabled: benefitsProgram.repeatEnabled ?? BENEFITS.DEFAULT_REPEAT_ENABLED,
+    rewardValidDays: benefitsProgram.rewardValidDays ?? BENEFITS.DEFAULT_REWARD_VALID_DAYS,
+    rewardDescription: benefitsProgram.rewardDescription ?? buildRewardDescription(rewardType, rewardValue),
     showProgress: benefitsProgram.showProgress ?? true,
   }
 }

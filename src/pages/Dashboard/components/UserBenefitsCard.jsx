@@ -1,13 +1,18 @@
-import { Gem, Gift, Bell, History, Calendar } from 'lucide-react'
-
-const BENEFITS = [
-  { icon: Gift, text: 'Programa de beneficios con 20% de descuento cada 6 visitas.' },
-  { icon: Bell, text: 'Recordatorios automáticos por WhatsApp (próximamente).' },
-  { icon: History, text: 'Historial completo de servicios y visitas.' },
-  { icon: Calendar, text: 'Reservas online 24/7 desde cualquier dispositivo.' },
-]
+import { Gem, Gift, History, Calendar } from 'lucide-react'
+import { useBenefitsSettings } from '@/hooks/useBenefits'
 
 function UserBenefitsCard() {
+  const { data: settings } = useBenefitsSettings()
+
+  const rewardEvery = settings?.rewardEveryVisits ?? 6
+  const rewardLabel = (settings?.rewardDescription || '20% de descuento').toLowerCase()
+
+  const BENEFITS = [
+    { icon: Gift, text: `Programa de beneficios con ${rewardLabel} cada ${rewardEvery} visitas.` },
+    { icon: History, text: 'Historial completo de servicios y visitas.' },
+    { icon: Calendar, text: 'Reservas online 24/7 desde cualquier dispositivo.' },
+  ]
+
   return (
       <div className="rounded-2xl border border-brand-border bg-brand-card p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.18)]">
       <div className="flex items-center gap-3 mb-5">

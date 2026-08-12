@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
-import { UserCircle, Phone, Mail, Save, MessageCircle, Key, User, Image as ImageIcon } from 'lucide-react'
+import { UserCircle, Phone, Mail, Save, MessageCircle, Key } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useAuth } from '@/context/AuthContext'
@@ -11,11 +11,9 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { useUpdateUserProfile } from '@/hooks/useUserProfile'
 import { USER_ROLES } from '@/constants/app'
 import { formatPhoneDisplayPY, formatPhoneStoragePY } from '@/utils/formatters'
-import { cn } from '@/utils/cn'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
-import ClientWorksTab from './components/ClientWorksTab'
 
 const profileSchema = z.object({
   displayName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -34,7 +32,6 @@ export default function ProfilePage() {
   usePageTitle('Mi Perfil')
   const { user, userProfile, role, sendPasswordReset } = useAuth()
   const { mutateAsync: updateProfile, isPending } = useUpdateUserProfile()
-  const [activeTab, setActiveTab] = useState('data')
 
   const isAdmin = role === USER_ROLES.ADMIN
 
@@ -107,7 +104,7 @@ export default function ProfilePage() {
           <p className="mt-0.5 text-sm text-brand-text-muted">
             {isAdmin 
               ? 'Gestiona tu información de cuenta.'
-              : 'Actualizá tus datos o revisá tus diseños.'}
+              : 'Actualizá tus datos y preferencias.'}
           </p>
         </div>
       </div>
@@ -122,46 +119,8 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* ── USER ONLY: Tabs ───────────────────────────────────────────────── */}
-      {!isAdmin && (
-        <div className="flex border-b border-brand-pastel">
-          <button
-            onClick={() => setActiveTab('data')}
-            className={cn(
-              'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors',
-              activeTab === 'data'
-                ? 'border-brand-primary text-brand-primary'
-                : 'border-transparent text-brand-text-muted hover:text-brand-text'
-            )}
-          >
-            <User className="h-4 w-4" />
-            Mis Datos
-          </button>
-          <button
-            onClick={() => setActiveTab('works')}
-            className={cn(
-              'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors',
-              activeTab === 'works'
-                ? 'border-brand-primary text-brand-primary'
-                : 'border-transparent text-brand-text-muted hover:text-brand-text'
-            )}
-          >
-            <ImageIcon className="h-4 w-4" />
-            Mis Diseños
-          </button>
-        </div>
-      )}
-
-      {/* ── Tab Content: Mis Diseños (User Only) ──────────────────────────── */}
-      {!isAdmin && activeTab === 'works' && (
-        <div className="pt-4">
-          <ClientWorksTab clientId={user?.uid} />
-        </div>
-      )}
-
-      {/* ── Tab Content: Mis Datos ────────────────────────────────────────── */}
-      {(isAdmin || activeTab === 'data') && (
-        <div className="space-y-6 pt-2">
+      {/* ── Profile content ──────────────────────────────────────────────── */}
+      <div className="space-y-6 pt-2">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <Card>
               <Card.Header title="Información personal" />
@@ -281,7 +240,6 @@ export default function ProfilePage() {
             </>
           )}
         </div>
-      )}
     </div>
   )
 }

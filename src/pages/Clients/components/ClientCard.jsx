@@ -1,5 +1,6 @@
 import { Phone, Edit2, CalendarDays, MessageCircle, History, Gift } from 'lucide-react'
 import { getInitials, formatPhoneDisplayPY } from '@/utils/formatters'
+import { useBenefitsSettings } from '@/hooks/useBenefits'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 
@@ -30,6 +31,14 @@ function WhatsAppBadge({ phone, phoneVerified }) {
 }
 
 function ClientCard({ client, onEdit, onViewHistory }) {
+  const { data: benefitsSettings } = useBenefitsSettings()
+
+  const isFreeService = benefitsSettings?.rewardType === 'free_service'
+  const rewardValue = benefitsSettings?.rewardValue ?? 20
+  const rewardBadge = isFreeService
+    ? `${client.freeServices} serv. gratis`
+    : `${client.freeServices} desc. ${rewardValue}%`
+
   return (
     <Card>
       <Card.Body>
@@ -74,7 +83,7 @@ function ClientCard({ client, onEdit, onViewHistory }) {
           {(client.freeServices ?? 0) > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary/10 px-2 py-0.5 text-[11px] font-medium text-brand-primary">
               <Gift className="h-3 w-3" />
-              {client.freeServices} desc. 20%
+              {rewardBadge}
             </span>
           )}
         </div>

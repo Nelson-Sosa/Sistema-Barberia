@@ -5,8 +5,6 @@ import {
   Users,
   Settings,
   UserCircle,
-  Image as ImageIcon,
-  GalleryHorizontal,
   Home,
   Scissors,
 } from 'lucide-react'
@@ -74,22 +72,6 @@ export const NAV_ITEMS = [
     icon: CalendarPlus,
     description: 'Reservar un turno',
     roles: ['user'],
-  },
-  {
-    id: 'public-works',
-    label: 'Trabajos',
-    path: ROUTES.WORKS,
-    icon: ImageIcon,
-    description: 'Nuestros diseños',
-    roles: ['user'],
-  },
-  {
-    id: 'admin-works',
-    label: 'Trabajos',
-    path: ROUTES.ADMIN_WORKS,
-    icon: ImageIcon,
-    description: 'Gestión de trabajos',
-    roles: ['admin'],
   },
   // {
   //   id: 'reports',

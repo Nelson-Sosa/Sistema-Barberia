@@ -93,18 +93,36 @@ export const COLLECTIONS = {
   NOTIFICATIONS: 'notifications',
   INCOME: 'income',
   LOYALTY_HISTORY: 'loyaltyHistory',
-  WORKS: 'works',
 }
 
 /** Default professional ID for MVP mono-professional mode */
 export const DEFAULT_PROFESSIONAL_ID = 'default'
 
-/** Benefits Program — visit-based rewards */
+/** Benefits Program — configurable loyalty rewards */
 export const BENEFITS = {
+  /** Legacy defaults (kept for backward compatibility) */
   DEFAULT_REWARD_EVERY_VISITS: 6,
   DEFAULT_REWARD_INCREMENT: 6,
   REWARD_TYPE: 'discount',
   REWARD_DESCRIPTION: '20% de descuento',
+
+  /** Accumulation strategies — how a completed appointment counts */
+  ACCUMULATION_TYPES: {
+    VISITS: 'visits',     // each done appointment = 1 visit
+    SERVICES: 'services', // each done service = 1 unit (future multi-service support)
+  },
+
+  /** Reward types granted at each threshold */
+  REWARD_TYPES: {
+    DISCOUNT: 'discount',           // % off the service price
+    FREE_SERVICE: 'free_service',   // a free service
+  },
+
+  /** Defaults for the configurable program */
+  DEFAULT_ACCUMULATION_TYPE: 'visits',
+  DEFAULT_REWARD_VALUE: 20,
+  DEFAULT_REPEAT_ENABLED: true,
+  DEFAULT_REWARD_VALID_DAYS: 0, // 0 = rewards never expire
 }
 
 /** Phase 2 — WhatsApp trigger types (not implemented) */

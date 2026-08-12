@@ -168,17 +168,5 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['clientId']);
     }
-
-    // ─── TRABAJOS (PORTFOLIO) ───
-    match /works/{workId} {
-      // Admin: CRUD total
-      allow read, write: if isAdmin();
-      
-      // Público no autenticado y clientes autenticados: pueden leer cualquier trabajo.
-      allow read: if true;
-      
-      // Solo el admin puede crear, editar y eliminar trabajos.
-      allow write: if isAdmin();
-    }
   }
 }

@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
-import { X, CalendarDays, Clock, DollarSign, Scissors, Gift, Sparkles } from 'lucide-react'
+import { CalendarDays, Clock, DollarSign, Scissors, Gift, Sparkles } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useClientHistory } from '@/hooks/useClients'
-import { useClientWorks } from '@/hooks/useWorks'
 import { useBenefitsSettings, useRedeemDiscount } from '@/hooks/useBenefits'
 import { useAuth } from '@/hooks/useAuth'
 import { APPOINTMENT_STATUS } from '@/constants/app'
@@ -13,7 +12,8 @@ import Button from '@/components/ui/Button'
 import Spinner from '@/components/ui/Spinner'
 import Badge from '@/components/ui/Badge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
-import WorkDetailModal from '@/pages/Works/components/WorkDetailModal'
+import Modal from '@/components/ui/Modal'
+import FormActions from '@/components/ui/FormActions'
 
 function getAptDate(apt) {
   if (apt.date?.toDate) return apt.date.toDate()
@@ -27,9 +27,17 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
   const redeemMutation = useRedeemDiscount()
   const { user } = useAuth()
   const [confirmRedeem, setConfirmRedeem] = useState(false)
-  const [selectedWork, setSelectedWork] = useState(null)
 
-  const { data: works, isLoading: isLoadingWorks } = useClientWorks(client?.id)
+  const isFreeService = benefitsSettings?.rewardType === 'free_service'
+  const rewardLabel = benefitsSettings?.rewardDescription || '20% de descuento'
+  const rewardEvery = benefitsSettings?.rewardEveryVisits ?? 6
+  const rewardValue = benefitsSettings?.rewardValue ?? 20
+  const rewardValidDays = benefitsSettings?.rewardValidDays ?? 0
+  const availableCount = client?.freeServices ?? 0
+
+  const redeemLabel = isFreeService
+    ? `${availableCount} servicio${availableCount > 1 ? 's' : ''} gratis para canjear.`
+    : `${availableCount} descuento${availableCount > 1 ? 's' : ''} del ${rewardValue}% para canjear.`
 
   const metrics = useMemo(() => {
     if (!appointments) {
@@ -50,30 +58,29 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-brand-pastel bg-brand-card p-4 sm:p-6 lg:p-8 shadow-2xl">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-brand-text-muted hover:bg-brand-pastel hover:text-brand-primary z-50"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
-        {isLoading || isLoadingWorks ? (
-          <div className="flex h-48 items-center justify-center">
-            <Spinner size="lg" />
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={client.name}
+      maxWidthClass="max-w-3xl"
+      footer={
+        <FormActions>
+          <Button variant="ghost" onClick={onClose}>Cerrar historial</Button>
+        </FormActions>
+      }
+    >
+      {isLoading ? (
+        <div className="flex h-48 items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-8">
+          {/* ── Client Header ──────────────────────────────────────────── */}
+          <div>
+            <p className="text-sm text-brand-text-muted">
+              {formatPhoneDisplayPY(client.phone || client.whatsapp) || 'Sin teléfono'}
+            </p>
           </div>
-        ) : (
-          <div className="flex flex-col gap-8">
-            {/* ── Client Header ──────────────────────────────────────────── */}
-            <div>
-              <h2 className="text-xl font-bold text-brand-text">{client.name}</h2>
-              <p className="mt-0.5 text-sm text-brand-text-muted">
-                {formatPhoneDisplayPY(client.phone || client.whatsapp) || 'Sin teléfono'}
-              </p>
-            </div>
 
             {/* ── Metrics Cards ──────────────────────────────────────────── */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -114,11 +121,14 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-sm">
                       <Sparkles className="h-4 w-4 text-amber-600" />
-                      <span className="text-amber-600 font-medium">20% de descuento disponible</span>
+                      <span className="text-amber-600 font-medium">{rewardLabel} disponible</span>
                     </div>
-                    <p className="text-sm text-brand-text-muted">
-                      {client.freeServices} descuento{(client.freeServices ?? 0) > 1 ? 's' : ''} del 20% para canjear.
-                    </p>
+                    <p className="text-sm text-brand-text-muted">{redeemLabel}</p>
+                    {rewardValidDays > 0 && (
+                      <p className="text-xs text-brand-text-muted">
+                        Recompensa válida por {rewardValidDays} día{rewardValidDays !== 1 ? 's' : ''} desde su entrega.
+                      </p>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -126,30 +136,30 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
                       onClick={() => setConfirmRedeem(true)}
                     >
                       <Gift className="h-3.5 w-3.5" />
-                      Canjear Descuento
+                      Canjear {isFreeService ? 'Servicio' : 'Descuento'}
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm text-brand-text-muted">
-                      <span>{client.totalVisits ?? 0} de {client.nextRewardAt ?? benefitsSettings.rewardEveryVisits ?? 6} visitas</span>
-                      <span className="font-medium text-brand-primary">{Math.max((client.nextRewardAt ?? benefitsSettings.rewardEveryVisits ?? 6) - (client.totalVisits ?? 0), 0)} restantes</span>
+                      <span>{client.totalVisits ?? 0} de {client.nextRewardAt ?? rewardEvery} visitas</span>
+                      <span className="font-medium text-brand-primary">{Math.max((client.nextRewardAt ?? rewardEvery) - (client.totalVisits ?? 0), 0)} restantes</span>
                     </div>
                     <div className="h-2.5 w-full overflow-hidden rounded-full bg-brand-pastel/50">
                       <div
                         className="h-full rounded-full bg-brand-primary transition-all duration-500"
                         style={{
                           width: `${Math.min(
-                            ((client.totalVisits ?? 0) / (client.nextRewardAt ?? benefitsSettings.rewardEveryVisits ?? 6)) * 100,
+                            ((client.totalVisits ?? 0) / (client.nextRewardAt ?? rewardEvery)) * 100,
                             100
                           )}%`
                         }}
                       />
                     </div>
                     <p className="text-sm text-brand-text-muted">
-                      {client.totalVisits >= (client.nextRewardAt ?? benefitsSettings.rewardEveryVisits ?? 6)
+                      {client.totalVisits >= (client.nextRewardAt ?? rewardEvery)
                         ? '¡Listo para recompensa!'
-                        : `Faltan ${Math.max((client.nextRewardAt ?? benefitsSettings.rewardEveryVisits ?? 6) - (client.totalVisits ?? 0), 0)} visita${Math.max((client.nextRewardAt ?? 6) - (client.totalVisits ?? 0), 0) !== 1 ? 's' : ''} para obtener un 20% de descuento.`
+                        : `Faltan ${Math.max((client.nextRewardAt ?? rewardEvery) - (client.totalVisits ?? 0), 0)} visita${Math.max((client.nextRewardAt ?? rewardEvery) - (client.totalVisits ?? 0), 0) !== 1 ? 's' : ''} para obtener ${rewardLabel}.`
                       }
                     </p>
                   </div>
@@ -218,49 +228,6 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
               )}
             </div>
 
-            {/* ── Photos & Works History ─────────────────────────────────── */}
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-brand-text-muted">
-                Fotos y Trabajos
-              </h3>
-
-              {works && works.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {works.map((work) => {
-                    const thumb = work.photos?.[0]?.secureUrl
-                    if (!thumb) return null
-                    return (
-                      <div
-                        key={work.id}
-                        onClick={() => setSelectedWork(work)}
-                        className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-brand-pastel/20"
-                      >
-                        <img
-                          src={thumb}
-                          alt={work.title || 'Trabajo'}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                        <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          <p className="truncate text-sm font-medium text-white shadow-sm">
-                            {work.title || 'Sin título'}
-                          </p>
-                          <p className="text-xs text-white/80 shadow-sm">
-                            {format(getAptDate({ date: work.createdAt }), "MMM yyyy", { locale: es })}
-                          </p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className="flex h-32 flex-col items-center justify-center rounded-xl border border-dashed border-brand-pastel bg-brand-pastel/10">
-                  <Sparkles className="mb-2 h-6 w-6 text-brand-text-muted" />
-                  <p className="text-sm text-brand-text-muted">No hay fotos registradas para este cliente</p>
-                </div>
-              )}
-            </div>
-
             {/* ── Redeem Confirmation ────────────────────────────────────── */}
             <ConfirmDialog
               isOpen={confirmRedeem}
@@ -269,26 +236,14 @@ function ClientHistoryModal({ isOpen, onClose, client }) {
                 await redeemMutation.mutateAsync({ clientId: client.id, adminUid: user?.uid })
                 setConfirmRedeem(false)
               }}
-              title="Canjear Descuento del 20%"
-              message={`¿Estás seguro de que deseas canjear 1 descuento del 20% para ${client.name}?`}
+              title={isFreeService ? 'Canjear Servicio Gratis' : `Canjear Descuento del ${rewardValue}%`}
+              message={`¿Estás seguro de que deseas canjear 1 ${isFreeService ? 'servicio gratis' : `descuento del ${rewardValue}%`} para ${client.name}?`}
               confirmLabel="Canjear"
               isLoading={redeemMutation.isPending}
             />
-
-            {/* ── Close ──────────────────────────────────────────────────── */}
-            <div className="flex justify-end pt-2 border-t border-brand-pastel">
-              <Button variant="ghost" onClick={onClose}>Cerrar historial</Button>
-            </div>
           </div>
         )}
-      </div>
-
-      <WorkDetailModal
-        isOpen={!!selectedWork}
-        onClose={() => setSelectedWork(null)}
-        work={selectedWork}
-      />
-    </div>
+    </Modal>
   )
 }
 

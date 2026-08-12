@@ -17,6 +17,8 @@ import { canStartServiceAt, getScheduleErrorMessage } from '@/services/scheduleS
 import { formatCurrency } from '@/utils/formatters'
 import { cn } from '@/utils/cn'
 import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
+import FormActions from '@/components/ui/FormActions'
 import WeeklyAvailabilityCalendar from '@/components/booking/WeeklyAvailabilityCalendar'
 import PaymentProofUploader from './PaymentProofUploader'
 
@@ -230,41 +232,61 @@ function UserBookingModal({ isOpen, onClose, defaultServiceId = null }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-2xl border border-brand-border bg-brand-card shadow-2xl flex flex-col max-w-[95vw] max-h-[92vh] sm:max-h-[90vh] overflow-hidden">
-        
-        {/* Header - Fixed */}
-        <div className="relative shrink-0 border-b border-brand-border/40 p-4 sm:px-6 sm:py-5 bg-brand-card z-10">
-          <button 
-            onClick={onClose} 
-            className="absolute right-3 top-3 sm:right-5 sm:top-4 rounded-lg p-2 text-brand-text-muted hover:bg-brand-pastel/50 hover:text-brand-text z-50 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      hideHeader
+      footer={
+        (step === STEPS.DETAILS || step === STEPS.PAYMENT) && (
+          <FormActions>
+            <Button variant="ghost" onClick={onClose} disabled={isSubmitting || isPending}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              form="booking-form"
+              loading={isSubmitting || isPending}
+              disabled={step === STEPS.PAYMENT && !uploadedProof}
+            >
+              {step === STEPS.PAYMENT ? 'Enviar comprobante' : 'Continuar'}
+            </Button>
+          </FormActions>
+        )
+      }
+    >
+      {/* Sticky wizard header */}
+      <div className="sticky top-0 z-10 -mx-5 -mt-5 mb-4 border-b border-brand-border/40 bg-brand-card px-5 py-4 sm:-mx-6 sm:-mt-6 sm:mb-6 sm:px-6 sm:py-5">
+        <div className="relative">
           {step !== STEPS.CATEGORY && (
-            <button 
-              onClick={handleBack} 
-              className="absolute left-3 top-3 sm:left-5 sm:top-4 rounded-lg p-2 text-brand-text-muted hover:bg-brand-pastel/50 hover:text-brand-text transition-colors"
+            <button
+              onClick={handleBack}
+              className="absolute left-0 top-1/2 -translate-y-1/2 rounded-lg p-2 text-brand-text-muted transition-colors hover:bg-brand-pastel/50 hover:text-brand-text"
+              aria-label="Volver"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
           )}
 
-          <h2 className="text-lg sm:text-xl font-bold text-brand-text text-center px-12">
+          <button
+            onClick={onClose}
+            className="absolute right-0 top-1/2 -translate-y-1/2 rounded-lg p-2 text-brand-text-muted transition-colors hover:bg-brand-pastel/50 hover:text-brand-text"
+            aria-label="Cerrar"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <h2 className="px-12 text-center text-lg font-bold text-brand-text sm:text-xl">
             Reservar Turno
           </h2>
-          <p className="mt-1 text-center text-xs sm:text-sm text-brand-text-muted px-2">
+          <p className="mt-1 px-2 text-center text-xs text-brand-text-muted sm:text-sm">
             {step === STEPS.PAYMENT
               ? 'Realizá el pago de la seña para confirmar tu turno.'
               : 'Podés agendar con hasta 2 horas de anticipación.'}
           </p>
         </div>
+      </div>
 
-        {/* Body - Scrollable */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          {availableCategories.length > 0 && renderProgress()}
+      {availableCategories.length > 0 && renderProgress()}
 
         {/* ── Step 0: Category */}
         {step === STEPS.CATEGORY && (
@@ -328,7 +350,7 @@ function UserBookingModal({ isOpen, onClose, defaultServiceId = null }) {
 
         {/* ── Step 2: Date + Time (shared form for steps 2 and 3) */}
         {(step === STEPS.DETAILS || step === STEPS.PAYMENT) && (
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form id="booking-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             {/* Service summary chip */}
             {selectedService && (
               <div className="flex items-center gap-3 rounded-xl border border-brand-border bg-brand-card p-2.5 sm:p-3">
@@ -429,37 +451,22 @@ function UserBookingModal({ isOpen, onClose, defaultServiceId = null }) {
                   </p>
                 )}
 
-                {/* Proof uploader */}
-                <div>
-                  <p className="mb-2 text-sm font-medium text-brand-text">
-                    Subí el comprobante de transferencia
-                  </p>
-                  <PaymentProofUploader
-                    onUploaded={(proof) => setUploadedProof(proof)}
-                    onClear={() => setUploadedProof(null)}
-                    disabled={isPending}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="mt-4 flex justify-end gap-3">
-              <Button variant="ghost" onClick={onClose} disabled={isSubmitting || isPending}>
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                loading={isSubmitting || isPending}
-                disabled={step === STEPS.PAYMENT && !uploadedProof}
-              >
-                {step === STEPS.PAYMENT ? 'Enviar comprobante' : 'Continuar'}
-              </Button>
+            {/* Proof uploader */}
+            <div>
+              <p className="mb-2 text-sm font-medium text-brand-text">
+                Subí el comprobante de transferencia
+              </p>
+              <PaymentProofUploader
+                onUploaded={(proof) => setUploadedProof(proof)}
+                onClear={() => setUploadedProof(null)}
+                disabled={isPending}
+              />
             </div>
-          </form>
+          </div>
         )}
-        </div>
-      </div>
-    </div>
+      </form>
+      )}
+    </Modal>
   )
 }
 

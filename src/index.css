@@ -86,6 +86,12 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* Slow Ken Burns zoom — used for the login background video (15–20s) */
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
 /* ── Base Reset & Global Styles ─────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
@@ -179,4 +185,17 @@
   .animate-slide-down    { animation: slideDown 0.2s ease-out; }
   .animate-slide-in-left { animation: var(--animate-slide-in-left); }
   .animate-badge-pulse   { animation: badgePulse 2s ease-in-out infinite; }
+
+  /* Slow cinematic zoom for the login video — subtle, never exaggerated */
+  .animate-slow-zoom {
+    animation: slowZoom 18s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+/* Respect users who prefer reduced motion — stop the video zoom */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slow-zoom {
+    animation: none;
+  }
 }
