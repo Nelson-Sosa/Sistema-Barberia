@@ -162,6 +162,8 @@ export async function updatePaymentSettings(config) {
 // ─── Business Settings (settings/business — independent document) ──────────────
 
 const DEFAULT_BUSINESS_SETTINGS = {
+  phone: '+595 983 986 775',
+  whatsapp: '595983986775',
   openingTime: '07:00',
   closingTime: '19:00',
   slotInterval: 30,

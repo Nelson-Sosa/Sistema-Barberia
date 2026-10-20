@@ -76,9 +76,11 @@ export const DATE_FORMAT = {
   FULL: 'dd/MM/yyyy HH:mm',
 }
 
-/** WhatsApp integration — placeholders for future integration */
+/** WhatsApp integration */
 export const WHATSAPP = {
-  ENABLED: false,
+  ENABLED: true,
+  PHONE: '595983986775',
+  PHONE_DISPLAY: '+595 983 986 775',
   API_URL: 'https://api.whatsapp.com/send',
 }
 
