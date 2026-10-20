@@ -14,6 +14,7 @@ import ServiceModal from './components/ServiceModal'
 import CategoryModal from './components/CategoryModal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import toast from 'react-hot-toast'
+import { cn } from '@/utils/cn'
 
 function ServicesPage() {
   usePageTitle('Servicios')
@@ -29,6 +30,7 @@ function ServicesPage() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [serviceToDelete, setServiceToDelete] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all')
 
   const { data: rawServices, isLoading } = isAdmin ? useAllServices() : useServices()
   const { data: categories } = useCategories()
@@ -130,11 +132,24 @@ function ServicesPage() {
     }
   }
 
+  const displayedCategories = useMemo(() => {
+    if (selectedCategoryFilter === 'all') return grouped.categories
+    return grouped.categories.filter((g) => g.category.id === selectedCategoryFilter)
+  }, [grouped.categories, selectedCategoryFilter])
+
+  const displayedUncategorized = useMemo(() => {
+    if (selectedCategoryFilter === 'all' || selectedCategoryFilter === 'uncategorized') {
+      return grouped.uncategorized
+    }
+    return []
+  }, [grouped.uncategorized, selectedCategoryFilter])
+
   const hasAnyServices = rawServices?.length > 0
-  const hasFilteredServices = grouped.categories.length > 0 || grouped.uncategorized.length > 0
+  const hasFilteredServices = displayedCategories.length > 0 || displayedUncategorized.length > 0
+  const hasMultipleCategories = (grouped.categories.length + (grouped.uncategorized.length > 0 ? 1 : 0)) > 1
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 sm:gap-8 pb-24 sm:pb-16">
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -171,27 +186,76 @@ function ServicesPage() {
         </div>
       </div>
 
-      {/* ── Search Bar ──────────────────────────────────────────────────────── */}
+      {/* ── Search & Filters ────────────────────────────────────────────────── */}
       {hasAnyServices && (
-        <div className="relative w-full max-w-md">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="h-5 w-5 text-brand-text-muted" />
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full max-w-md">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <Search className="h-5 w-5 text-brand-text-muted" />
+            </div>
+            <input
+              type="text"
+              className="h-10 w-full rounded-xl border border-brand-border bg-brand-card pl-10 pr-10 text-sm text-brand-text placeholder:text-brand-text-muted transition-all focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/30"
+              placeholder="Buscar por nombre, descripción o categoría..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-text-muted transition-colors hover:text-brand-text"
+                aria-label="Limpiar búsqueda"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
-          <input
-            type="text"
-            className="h-10 w-full rounded-xl border border-brand-border bg-brand-card pl-10 pr-10 text-sm text-brand-text placeholder:text-brand-text-muted transition-all focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/30"
-            placeholder="Buscar por nombre, descripción o categoría..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-text-muted transition-colors hover:text-brand-text"
-              aria-label="Limpiar búsqueda"
-            >
-              <X className="h-4 w-4" />
-            </button>
+
+          {/* Horizontal scrollable category tabs */}
+          {hasMultipleCategories && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mx-1 px-1">
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryFilter('all')}
+                className={cn(
+                  'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200',
+                  selectedCategoryFilter === 'all'
+                    ? 'bg-brand-primary text-white shadow-sm'
+                    : 'border border-brand-border bg-brand-card text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-text'
+                )}
+              >
+                Todos ({rawServices?.length || 0})
+              </button>
+              {grouped.categories.map(({ category, services }) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setSelectedCategoryFilter(category.id)}
+                  className={cn(
+                    'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200',
+                    selectedCategoryFilter === category.id
+                      ? 'bg-brand-primary text-white shadow-sm'
+                      : 'border border-brand-border bg-brand-card text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-text'
+                  )}
+                >
+                  {category.name} ({services.length})
+                </button>
+              ))}
+              {grouped.uncategorized.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryFilter('uncategorized')}
+                  className={cn(
+                    'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200',
+                    selectedCategoryFilter === 'uncategorized'
+                      ? 'bg-brand-primary text-white shadow-sm'
+                      : 'border border-brand-border bg-brand-card text-brand-text-muted hover:bg-brand-alt-row hover:text-brand-text'
+                  )}
+                >
+                  Sin categoría ({grouped.uncategorized.length})
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -205,7 +269,7 @@ function ServicesPage() {
         hasFilteredServices ? (
           <div className="flex flex-col gap-8">
             {/* Grouped by category */}
-            {grouped.categories.map(({ category, services }) => (
+            {displayedCategories.map(({ category, services }) => (
               <CategoryCard
                 key={category.id}
                 category={category}
@@ -221,17 +285,17 @@ function ServicesPage() {
             ))}
 
             {/* Uncategorized section */}
-            {grouped.uncategorized.length > 0 && (
+            {displayedUncategorized.length > 0 && (
               <CategoryCard
                 category={{ name: 'Sin categoría', description: '' }}
-                services={grouped.uncategorized}
+                services={displayedUncategorized}
                 isAdmin={isAdmin}
                 onEditCategory={() => {}}
                 onAddService={handleAddServiceGeneric}
                 onEditService={handleEditService}
                 onDeleteService={setServiceToDelete}
                 onBook={handleBookService}
-                defaultOpen={grouped.categories.length === 0}
+                defaultOpen={displayedCategories.length === 0}
               />
             )}
           </div>

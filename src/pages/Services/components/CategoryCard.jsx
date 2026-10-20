@@ -144,7 +144,7 @@ function CategoryCard({ category, services, isAdmin, onEditCategory, onAddServic
                 No hay servicios en esta categoría.
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-2.5 p-3 sm:grid-cols-2 sm:gap-4 sm:p-5 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3.5 p-3.5 sm:grid-cols-2 sm:gap-4 sm:p-5 lg:grid-cols-3 xl:grid-cols-4">
                 {activeServices.map((svc, i) => (
                   <motion.div
                     key={svc.id}
