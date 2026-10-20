@@ -15,7 +15,7 @@ import GuestForm from './GuestForm'
  * @param {boolean} props.guestSubmitting
  */
 export default function BookingAuthSelector({ onLogin, onGuestSubmit, guestSubmitting = false }) {
-  const [showGuestForm, setShowGuestForm] = useState(false)
+  const [showGuestForm, setShowGuestForm] = useState(true)
 
   return (
     <div className="space-y-4">
