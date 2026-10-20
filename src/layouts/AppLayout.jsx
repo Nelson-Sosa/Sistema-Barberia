@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
-import WhatsAppFloatingButton from '@/components/common/WhatsAppFloatingButton'
 import { useAuth } from '@/hooks/useAuth'
 import { USER_ROLES } from '@/constants/app'
 import { cn } from '@/utils/cn'
@@ -63,9 +62,6 @@ function AppLayout() {
           </div>
         </main>
       </div>
-
-      {/* Floating Action Button — solo en zonas públicas y del cliente, oculto en el Panel Administrador */}
-      {!isAdmin && <WhatsAppFloatingButton />}
     </div>
   )
 }
