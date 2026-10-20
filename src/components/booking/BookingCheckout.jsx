@@ -62,6 +62,8 @@ export default function BookingCheckout({
   onGuestSubmit,
   onContinue,
   guestSubmitting = false,
+  notifyWhatsApp = false,
+  onToggleWhatsApp,
 }) {
   const duration = service?.duration || 60
   const durationLabel =
@@ -125,6 +127,17 @@ export default function BookingCheckout({
               Registramos tu turno automáticamente para que puedas verlo en “Mis Turnos”.
             </p>
           )}
+
+          <label className="flex items-center gap-2.5 cursor-pointer text-xs text-brand-text select-none py-1">
+            <input
+              type="checkbox"
+              id="auth-whatsapp-confirm"
+              checked={notifyWhatsApp}
+              onChange={(e) => onToggleWhatsApp?.(e.target.checked)}
+              className="h-4 w-4 rounded border-brand-border text-brand-primary focus:ring-brand-primary accent-brand-primary cursor-pointer"
+            />
+            <span>Confirmar también por WhatsApp al finalizar</span>
+          </label>
 
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button variant="outline" onClick={onLogout} leftIcon={<LogOut className="h-4 w-4" />}>

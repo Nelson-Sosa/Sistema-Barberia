@@ -17,6 +17,7 @@ const guestSchema = z
       .trim()
       .min(1, 'El teléfono es obligatorio')
       .regex(/^[+]?[0-9()\s.-]+$/, 'Formato de teléfono inválido'),
+    notifyWhatsApp: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     const digits = (data.phone || '').replace(/\D/g, '')
@@ -29,7 +30,7 @@ const guestSchema = z
  * GuestForm — datos mínimos para confirmar una reserva como invitado.
  * Campos obligatorios: nombre y teléfono.
  *
- * @param {{ loading: boolean, onSubmit: (values: {name: string, phone: string}) => void }} props
+ * @param {{ loading: boolean, onSubmit: (values: {name: string, phone: string, notifyWhatsApp?: boolean}) => void }} props
  */
 export default function GuestForm({ loading = false, onSubmit, defaultValues = {} }) {
   const {
@@ -38,7 +39,7 @@ export default function GuestForm({ loading = false, onSubmit, defaultValues = {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(guestSchema),
-    defaultValues: { name: '', phone: '', ...defaultValues },
+    defaultValues: { name: '', phone: '', notifyWhatsApp: false, ...defaultValues },
   })
 
   return (
@@ -63,6 +64,16 @@ export default function GuestForm({ loading = false, onSubmit, defaultValues = {
         error={errors.phone?.message}
         {...register('phone')}
       />
+
+      <label className="flex items-center gap-2.5 cursor-pointer text-xs text-brand-text select-none py-1">
+        <input
+          type="checkbox"
+          id="guest-whatsapp"
+          className="h-4 w-4 rounded border-brand-border text-brand-primary focus:ring-brand-primary accent-brand-primary cursor-pointer"
+          {...register('notifyWhatsApp')}
+        />
+        <span>Confirmar también por WhatsApp al finalizar</span>
+      </label>
 
       <Button
         type="submit"
