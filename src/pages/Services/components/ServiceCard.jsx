@@ -108,12 +108,12 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
           </div>
 
           {/* ── Action & Price Row ───────────────────────────────────────── */}
-          <div className="mt-4 flex items-center justify-between gap-3 border-t border-brand-border/70 pt-3">
-            <div className="flex flex-col min-w-0">
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-brand-border/70 pt-3">
+            <div className="flex flex-col">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-text-muted/80">
                 Precio
               </span>
-              <span className="text-lg font-bold tracking-tight text-brand-gold truncate">
+              <span className="text-lg font-bold tracking-tight text-brand-gold">
                 {formatCurrency(service.price)}
               </span>
             </div>
@@ -121,7 +121,7 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
             {isAdmin ? (
               <Button
                 variant={active ? 'secondary' : 'outline'}
-                className="h-11 min-h-[44px] px-4 text-xs font-semibold rounded-xl shrink-0"
+                className="h-11 min-h-[44px] px-4 text-xs font-semibold rounded-xl shrink-0 w-full sm:w-auto"
                 onClick={handleToggleActive}
               >
                 {active ? 'Desactivar' : 'Activar'}
@@ -129,7 +129,7 @@ function ServiceCard({ service, categoryName, isAdmin, onBook, onEdit }) {
             ) : (
               <Button
                 className={cn(
-                  'h-11 min-h-[44px] px-5 rounded-xl text-sm font-semibold tracking-wide shrink-0',
+                  'h-11 min-h-[44px] px-5 rounded-xl text-sm font-semibold tracking-wide shrink-0 w-full sm:w-auto',
                   'bg-brand-gold text-brand-primary shadow-sm shadow-brand-gold/20',
                   'hover:bg-[#b89322] active:bg-[#a17e17]',
                   'focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2',
